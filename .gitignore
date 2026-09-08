@@ -8,6 +8,10 @@ __pycache__/
 *.o
 *.obj
 
+# Local binaries & tools
+cloudflared.exe
+*.exe
+
 # Distribution / packaging
 .Python
 build/
