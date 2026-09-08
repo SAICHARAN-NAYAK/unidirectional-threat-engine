@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Passive Unidirectional Network Threat Detection Engine & Air-Gapped SOC Monitoring Dashboard. Real-time telemetry, radar fanout, and forensic evidence analysis.">
+  <title>CYBERSHIELD // Unidirectional Passive Threat Sensor Enclave</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+
+  <!-- Top Navigation & Enclave Status Header -->
+  <header class="header-bar">
+    <div class="brand-section">
+      <div class="brand-logo-icon">
+        <svg viewBox="0 0 24 24">
+          <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/>
+        </svg>
+      </div>
+      <div>
+        <h1 class="brand-title">CYBERSHIELD // THREAT ENCLAVE</h1>
+        <div class="brand-subtitle">PASSIVE AIR-GAPPED OPTICAL DATA DIODE MONITOR</div>
+      </div>
+    </div>
+
+    <!-- Air-Gap Hardware Diode Status Indicator -->
+    <div class="diode-badge-container" id="diodeStatusContainer">
+      <span class="pulsing-led" id="diodeLed"></span>
+      <span class="diode-text" id="diodeStatusText">INGEST: UNIDIRECTIONAL RX ONLY (TX BLOCKED)</span>
+    </div>
+
+    <div class="header-right">
+      <div class="sys-clock" id="sysClock">00:00:00 UTC</div>
+      <div class="connection-pill" id="connStatus">● WEBSOCKET STREAM ACTIVE</div>
+    </div>
+  </header>
+
+  <!-- Main Dashboard Container -->
+  <main class="dashboard-container">
+
+    <!-- KPI Metrics Top HUD -->
+    <section class="kpi-metrics-grid" aria-label="Sensor Telemetry Indicators">
+      
+      <!-- Card 1: Sustained Ingest Rate -->
+      <div class="kpi-card" id="cardPps">
+        <div class="kpi-header">
+          <span class="kpi-label">Sustained Ingest Rate</span>
+          <span class="kpi-icon">⚡</span>
+        </div>
+        <div class="kpi-value" id="metricPps">0</div>
+        <div class="kpi-subtext">
+          <span class="kpi-badge badge-cyan" id="metricMbps">0.0 Mbps</span>
+          <span>Target: 25k - 50k+ pkts/sec</span>
+        </div>
+      </div>
+
+      <!-- Card 2: Total Packets Evaluated -->
+      <div class="kpi-card" id="cardPackets">
+        <div class="kpi-header">
+          <span class="kpi-label">Evaluated Packets</span>
+          <span class="kpi-icon">📦</span>
+        </div>
+        <div class="kpi-value" id="metricPackets">0</div>
+        <div class="kpi-subtext">
+          <span id="metricUptime">Uptime: 0.0s</span>
+          <span class="kpi-badge badge-green" id="metricFlows">0 flows</span>
+        </div>
+      </div>
+
+      <!-- Card 3: Sliding Window Eval Latency -->
+      <div class="kpi-card kpi-success" id="cardLatency">
+        <div class="kpi-header">
+          <span class="kpi-label">Evaluation Latency</span>
+          <span class="kpi-icon">⏱️</span>
+        </div>
+        <div class="kpi-value" id="metricLatency">0.0 ms</div>
+        <div class="kpi-subtext">
+          <span>Sliding Window: 3.0s</span>
+          <span class="kpi-badge badge-green">16 Shards</span>
+        </div>
+      </div>
+
+      <!-- Card 4: Threat Alerts Counter -->
+      <div class="kpi-card kpi-danger" id="cardAlerts">
+        <div class="kpi-header">
+          <span class="kpi-label">Active Threat Alerts</span>
+          <span class="kpi-icon">🚨</span>
+        </div>
+        <div class="kpi-value" id="metricAlerts">0</div>
+        <div class="kpi-subtext" id="metricSeveritySummary">
+          <span class="kpi-badge badge-red" id="badgeCrit">0 Crit</span>
+          <span class="kpi-badge badge-cyan" id="badgeHigh">0 High</span>
+          <span id="badgeMed">0 Med</span>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- Main Content Grid (Radar & Controls on Left, Alerts Feed on Right) -->
+    <div class="content-grid">
+
+      <!-- Left Column: Radar Visualizer & Injection Control Console -->
+      <div class="glass-panel">
+        
+        <div class="panel-header">
+          <div class="panel-title">
+            <span class="panel-title-dot"></span>
+            <span>Real-Time Threat Radar & Fanout Matrix</span>
+          </div>
+          <button class="btn-secondary" id="btnToggleGen" style="padding: 4px 10px; font-size: 0.72rem;">
+            <span>⏸️</span> <span id="genToggleText">Pause Generator</span>
+          </button>
+        </div>
+
+        <!-- Radar Canvas Visualizer -->
+        <div class="radar-container" id="radarWrapper">
+          <canvas id="radarCanvas" width="700" height="380"></canvas>
+          <div class="radar-overlay-stats">
+            <div class="legend-item">
+              <span class="legend-dot" style="background: var(--accent-emerald);"></span>
+              <span>Monitored Enclave</span>
+            </div>
+            <div class="legend-item">
+              <span class="legend-dot" style="background: var(--accent-cyan);"></span>
+              <span>Benign Ingress</span>
+            </div>
+            <div class="legend-item">
+              <span class="legend-dot" style="background: var(--accent-crimson);"></span>
+              <span>Hostile Vectors</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Interactive Traffic Controls & Attack Injector -->
+        <div class="controls-section">
+          
+          <!-- Throughput Rate Controller -->
+          <div class="rate-control-row">
+            <span class="rate-label">Traffic Rate:</span>
+            <div class="rate-slider-wrap">
+              <input type="range" id="rateSlider" class="rate-slider" min="1000" max="60000" step="1000" value="30000">
+              <span class="rate-value-pill" id="rateValueDisplay">30,000 pps</span>
+            </div>
+            <div class="preset-btn-group">
+              <button class="btn-preset" id="btnPreset5k">5k</button>
+              <button class="btn-preset" id="btnPreset25k">25k</button>
+              <button class="btn-preset" id="btnPreset50k">50k</button>
+            </div>
+          </div>
+
+          <!-- Quick Attack Vector Injection Grid -->
+          <div class="injection-grid">
+            
+            <button class="btn-attack btn-attack-danger" id="btnInjectSyn">
+              <div class="attack-title">⚡ SYN Flood Burst</div>
+              <div class="attack-desc">180 pkts / Spoofed Cluster</div>
+            </button>
+
+            <button class="btn-attack btn-attack-purple" id="btnInjectBeacon">
+              <div class="attack-title">📡 C2 Beacon Pulse</div>
+              <div class="attack-desc">CV &lt; 0.15 Periodic Jitter</div>
+            </button>
+
+            <button class="btn-attack btn-attack-warn" id="btnInjectScan">
+              <div class="attack-title">🔍 Recon Port Scan</div>
+              <div class="attack-desc">40 Ports Host Fanout</div>
+            </button>
+
+            <button class="btn-attack btn-attack-cyan" id="btnInjectDga">
+              <div class="attack-title">🌐 DGA DNS Tunnel</div>
+              <div class="attack-desc">High Shannon Entropy (&gt;3.65)</div>
+            </button>
+
+            <button class="btn-attack btn-attack-danger" id="btnInjectJa4">
+              <div class="attack-title">🛡️ Malicious JA4 TLS</div>
+              <div class="attack-desc">Cobalt Strike Fingerprint</div>
+            </button>
+
+            <button class="btn-attack btn-attack-cyan" id="btnReplayPcap">
+              <div class="attack-title">📼 Replay Test PCAP</div>
+              <div class="attack-desc">Multi-Vector 430 Frame Capture</div>
+            </button>
+
+          </div>
+
+          <!-- Auxiliary Tools (Custom PCAP upload & SIEM Webhook) -->
+          <div class="aux-tools-row">
+            <input type="file" id="pcapFileInput" accept=".pcap" style="display: none;">
+            <button class="btn-secondary" id="btnUploadPcapTrigger">
+              <span>📂</span> <span>Upload Custom PCAP</span>
+            </button>
+            <button class="btn-secondary" id="btnConfigureSiem">
+              <span>🔗</span> <span id="siemStatusText">SIEM Webhook: Local JSONL</span>
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- Right Column: Real-Time Alerts Feed -->
+      <div class="glass-panel">
+        
+        <div class="panel-header">
+          <div class="panel-title">
+            <span class="panel-title-dot" style="background: var(--accent-crimson); box-shadow: 0 0 8px var(--accent-crimson);"></span>
+            <span>Live Threat Attribution Feed</span>
+          </div>
+          <button class="btn-secondary" id="btnClearAlerts" style="padding: 4px 10px; font-size: 0.72rem;">
+            <span>🗑️</span> <span>Clear View</span>
+          </button>
+        </div>
+
+        <!-- Filter Tabs -->
+        <div class="alerts-filter-bar">
+          <button class="filter-tab active" data-filter="ALL" id="tabAll">ALL (0)</button>
+          <button class="filter-tab" data-filter="CRITICAL" id="tabCritical">CRITICAL (0)</button>
+          <button class="filter-tab" data-filter="HIGH" id="tabHigh">HIGH (0)</button>
+          <button class="filter-tab" data-filter="MEDIUM" id="tabMedium">MEDIUM (0)</button>
+          <button class="filter-tab" data-filter="JA4_DNS" id="tabDnsJa4">JA4 / DNS</button>
+        </div>
+
+        <!-- Streaming Alerts Table -->
+        <div class="alerts-feed-wrapper">
+          <table class="alerts-table" id="alertsTable">
+            <thead>
+              <tr>
+                <th style="width: 75px;">TIME</th>
+                <th style="width: 85px;">SEV</th>
+                <th>THREAT CLASS</th>
+                <th>FLOW ATTRIBUTION</th>
+                <th style="width: 70px;">CONF</th>
+                <th style="width: 75px;">ACTION</th>
+              </tr>
+            </thead>
+            <tbody id="alertsTableBody">
+              <!-- Dynamically populated via WebSocket -->
+              <tr>
+                <td colspan="6" style="text-align: center; color: var(--text-muted); padding: 40px;">
+                  Monitoring passive network diode... Awaiting threat triggers.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- Forensic Evidence Deep Dive Modal -->
+  <div class="modal-backdrop" id="modalForensics">
+    <div class="modal-window">
+      <div class="modal-header">
+        <div class="modal-title">
+          <span>🔬 FORENSIC EVIDENCE INSPECTOR</span>
+          <span class="sev-pill" id="modalSevPill">CRITICAL</span>
+        </div>
+        <button class="modal-close-btn" id="modalCloseBtn">&times;</button>
+      </div>
+      <div class="modal-body">
+        
+        <div class="forensic-meta-grid">
+          <div class="meta-box">
+            <div class="meta-box-label">Threat Classification</div>
+            <div class="meta-box-value" id="modalThreatClass">VOLUMETRIC_SYN_FLOOD</div>
+          </div>
+          <div class="meta-box">
+            <div class="meta-box-label">Detection Confidence</div>
+            <div class="meta-box-value" id="modalConfidence">98.0%</div>
+          </div>
+          <div class="meta-box">
+            <div class="meta-box-label">Source Host / Cluster</div>
+            <div class="meta-box-value" id="modalSrc">172.16.x.x</div>
+          </div>
+          <div class="meta-box">
+            <div class="meta-box-label">Destination Target</div>
+            <div class="meta-box-value" id="modalDst">192.168.1.1:80</div>
+          </div>
+        </div>
+
+        <div>
+          <div class="meta-box-label" style="margin-bottom: 6px;">Quantitative Evidence & Feature Metrics</div>
+          <pre class="evidence-code-block" id="modalEvidenceJson">{}</pre>
+        </div>
+
+        <div>
+          <div class="meta-box-label" style="margin-bottom: 6px;">ArcSight CEF (Common Event Format) SIEM String</div>
+          <pre class="evidence-code-block" id="modalCefString" style="color: var(--accent-emerald); font-size: 0.7rem;"></pre>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" id="btnCopyCef">📋 Copy CEF</button>
+        <button class="btn-secondary" id="btnModalClose">Close Inspector</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Client Application Script -->
+  <script src="/static/app.js"></script>
+</body>
+</html>

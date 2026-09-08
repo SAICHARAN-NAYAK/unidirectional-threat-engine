@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  threat-enclave:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: cybershield-threat-enclave:latest
+    container_name: cybershield-soc
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      - HOST=0.0.0.0
+      - PORT=8080
+      - PYTHONUNBUFFERED=1
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8080/api/telemetry')"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+    resources:
+      limits:
+        cpus: '2.0'
+        memory: 2G
