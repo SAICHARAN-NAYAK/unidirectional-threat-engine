@@ -312,6 +312,56 @@ function handleTelemetryUpdate(data) {
   }
 }
 
+// Known Enterprise Assets & Service Hostnames for Natural Identification
+const KNOWN_HOSTNAMES = {
+  "192.168.1.1": "edge-gw01.corp",
+  "192.168.1.10": "ad-dc01.corp",
+  "192.168.1.25": "exchange-mail.corp",
+  "192.168.1.45": "payroll-erp.internal",
+  "192.168.1.80": "devops-gitlab.internal",
+  "192.168.1.90": "pgsql-db01.internal",
+  "8.8.8.8": "dns.google",
+  "1.1.1.1": "cloudflare-dns",
+  "203.0.113.88": "c2-mirai-node.ru",
+  "185.220.101.5": "tor-cobalt-c2.ch",
+  "93.184.216.34": "cdn-edge01"
+};
+
+function formatEndpoint(ipStr, portNum) {
+  if (!ipStr) return "";
+  let baseIp = ipStr.split(" ")[0].split(":")[0];
+  let extra = ipStr.includes(" ") ? ipStr.substring(ipStr.indexOf(" ")) : "";
+  
+  let hostname = KNOWN_HOSTNAMES[baseIp];
+  if (!hostname && baseIp.startsWith("192.168.1.")) {
+    const octet = baseIp.split(".")[3];
+    hostname = `wkst-${octet}.corp`;
+  }
+
+  let portLabel = "";
+  const p = parseInt(portNum || (ipStr.includes(":") ? ipStr.split(":")[1] : 0), 10);
+  if (p > 0) {
+    let protoName = "";
+    if (p === 443 || p === 8443) protoName = "HTTPS";
+    else if (p === 80 || p === 8080) protoName = "HTTP";
+    else if (p === 53) protoName = "DNS";
+    else if (p === 22) protoName = "SSH";
+    else if (p === 445) protoName = "SMB";
+    else if (p === 88) protoName = "KRB";
+    else if (p === 3389) protoName = "RDP";
+    else if (p === 5432) protoName = "PGSQL";
+    else if (p === 993) protoName = "IMAPS";
+
+    portLabel = protoName 
+      ? `<span class="port-badge" title="Port ${p}">${protoName}</span>` 
+      : `<span class="port-num">:${p}</span>`;
+  }
+
+  const hostTag = hostname ? `<span class="host-tag">${hostname}</span>` : "";
+  const extraTag = extra ? `<span class="extra-targets">${extra}</span>` : "";
+  return `<span class="endpoint-item"><span class="ip-addr">${baseIp}</span>${hostTag}${portLabel}${extraTag}</span>`;
+}
+
 function renderAlertsTable() {
   if (!alertsTableBody) return;
 
@@ -323,7 +373,10 @@ function renderAlertsTable() {
       timeStr = `${d.toTimeString().substring(0, 8)}.${ms}`;
     }
 
-    const targetFlow = `${a.src_ip} &rarr; ${a.dst_ip}${a.dst_port ? ":" + a.dst_port : ""}`;
+    const srcEndpoint = formatEndpoint(a.src_ip, null);
+    const dstEndpoint = formatEndpoint(a.dst_ip, a.dst_port);
+    const targetFlow = `<div class="endpoint-flow">${srcEndpoint}<span class="flow-arrow">&rarr;</span>${dstEndpoint}</div>`;
+
     const confScore = a.confidence_score !== undefined ? a.confidence_score : 0.85;
     const confPct = Math.round(confScore * 100);
 
@@ -345,7 +398,7 @@ function renderAlertsTable() {
         <td style="font-family: var(--font-mono); color: var(--text-dim); font-size: 0.65rem;">${timeStr}</td>
         <td><span class="sev-pill ${sevClass}">${a.severity}</span></td>
         <td style="font-weight: 700; color: #fff;">${a.threat_class}</td>
-        <td style="font-family: var(--font-mono); font-size: 0.68rem; color: #38bdf8;">${targetFlow}</td>
+        <td>${targetFlow}</td>
         <td>
           <div class="conf-cell">
             <span class="conf-val" style="color: ${confColor};">${confPct}%</span>

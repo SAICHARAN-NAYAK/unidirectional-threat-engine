@@ -77,26 +77,31 @@
         <div class="kpi-block-label">Ingest Rate</div>
         <div class="kpi-block-value" id="metricPps">0</div>
         <div class="kpi-block-sub" id="metricMbps">0.0 Mbps // 16 Shards</div>
+        <span class="kpi-trend trend-up">▲ Sustained Ingress</span>
       </div>
       <div class="kpi-block">
         <div class="kpi-block-label">Evaluated Packets</div>
         <div class="kpi-block-value" id="metricPackets">0</div>
         <div class="kpi-block-sub" id="metricUptime">Uptime: 0.0s</div>
+        <span class="kpi-trend trend-neutral">● Continuous Stream</span>
       </div>
       <div class="kpi-block">
         <div class="kpi-block-label">Evaluation Latency</div>
         <div class="kpi-block-value" id="metricLatency" style="color: #34d399;">0.0 ms</div>
         <div class="kpi-block-sub">Window: 3.0s (Zero Contention)</div>
+        <span class="kpi-trend trend-good">⚡ Sub-ms SLA</span>
       </div>
       <div class="kpi-block">
         <div class="kpi-block-label">Active Threat Alerts</div>
         <div class="kpi-block-value" id="metricAlerts" style="color: #f87171;">0</div>
         <div class="kpi-block-sub" id="metricSeveritySummary">0 Crit / 0 High / 0 Med</div>
+        <span class="kpi-trend trend-alert">⚠️ Active Triage</span>
       </div>
       <div class="kpi-block">
         <div class="kpi-block-label">Monitored Enclave</div>
         <div class="kpi-block-value" style="font-size: 1.25rem; line-height: 1.4; color: #38bdf8;">192.168.1.0/24</div>
         <div class="kpi-block-sub" id="metricFlows">0 Active Flows</div>
+        <span class="kpi-trend trend-neutral">16 Shard Rx</span>
       </div>
     </section>
 
@@ -166,8 +171,25 @@
         <!-- Right Sub-column: Dense Real-Time Alert Feed -->
         <div class="panel-box">
           <div class="panel-box-header">
-            <span>Live Threat Attribution Stream</span>
-            <button class="btn-ctrl" id="btnClearAlerts" style="padding: 2px 8px;">Clear Feed</button>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span class="live-indicator-dot"></span>
+              <span>Live Threat Attribution Stream</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <input type="text" id="streamSearchInput" class="stream-search-input" placeholder="Search host, IP, threat..." />
+              <button class="btn-ctrl" id="btnClearAlerts" style="padding: 2px 8px;">Clear Feed</button>
+            </div>
+          </div>
+          <!-- Real-Time Interactive Filter Strip -->
+          <div class="stream-filter-bar">
+            <span class="filter-label">SEVERITY:</span>
+            <button class="filter-pill active" data-filter="ALL">ALL</button>
+            <button class="filter-pill" data-filter="CRITICAL">CRIT</button>
+            <button class="filter-pill" data-filter="HIGH">HIGH</button>
+            <button class="filter-pill" data-filter="MEDIUM">MED</button>
+            <button class="filter-pill" data-filter="LOW">LOW</button>
+            <button class="filter-pill" data-filter="INFO">INFO</button>
+            <span class="stream-count-badge" id="streamFilteredCount">Showing all</span>
           </div>
           <div class="panel-box-body" style="padding: 0;">
             <div class="dense-table-wrap">

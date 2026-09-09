@@ -482,6 +482,162 @@ body {
   transition: width 0.3s ease;
 }
 
+/* Natural Hostnames & Protocol Endpoint Tagging */
+.endpoint-flow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: nowrap;
+}
+.endpoint-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.ip-addr {
+  color: #e2e8f0;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+}
+.host-tag {
+  font-size: 0.62rem;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  color: #38bdf8;
+  background: rgba(56, 189, 248, 0.1);
+  border: 1px solid rgba(56, 189, 248, 0.25);
+  padding: 0 4px;
+  border-radius: 3px;
+}
+.port-badge {
+  font-size: 0.58rem;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  color: #a78bfa;
+  background: rgba(167, 139, 250, 0.12);
+  border: 1px solid rgba(167, 139, 250, 0.3);
+  padding: 0 4px;
+  border-radius: 2px;
+}
+.port-num {
+  color: #94a3b8;
+  font-size: 0.68rem;
+  font-family: var(--font-mono);
+}
+.flow-arrow {
+  color: #64748b;
+  font-size: 0.72rem;
+}
+.extra-targets {
+  color: #fbbf24;
+  font-size: 0.64rem;
+  font-weight: 600;
+  margin-left: 2px;
+}
+
+/* Stream Search & Live Filter Bar */
+.stream-search-input {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-ui);
+  color: #fff;
+  padding: 3px 8px;
+  border-radius: 3px;
+  font-size: 0.7rem;
+  font-family: var(--font-sans);
+  outline: none;
+  width: 170px;
+  transition: border-color 0.15s, width 0.2s;
+}
+.stream-search-input:focus {
+  border-color: #38bdf8;
+  width: 220px;
+}
+.stream-filter-bar {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 12px;
+  background: rgba(17, 26, 46, 0.75);
+  border-bottom: 1px solid var(--border-dim);
+  font-size: 0.68rem;
+  font-family: var(--font-mono);
+}
+.filter-label {
+  color: var(--text-dim);
+  font-size: 0.62rem;
+  font-weight: 700;
+  margin-right: 2px;
+}
+.filter-pill {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-dim);
+  color: var(--text-muted);
+  padding: 2px 7px;
+  border-radius: 3px;
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  transition: all 0.15s;
+}
+.filter-pill:hover {
+  background: var(--bg-surface-hover);
+  color: #fff;
+}
+.filter-pill.active {
+  background: #2563eb;
+  border-color: #3b82f6;
+  color: #fff;
+  font-weight: 700;
+}
+.stream-count-badge {
+  margin-left: auto;
+  color: var(--text-dim);
+  font-size: 0.62rem;
+}
+.live-indicator-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 6px #10b981;
+  animation: pulseLiveDot 2s infinite ease-in-out;
+}
+@keyframes pulseLiveDot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.85); }
+}
+
+/* KPI Trend Badges */
+.kpi-trend {
+  display: inline-block;
+  font-size: 0.62rem;
+  font-family: var(--font-mono);
+  padding: 1px 5px;
+  border-radius: 2px;
+  margin-top: 4px;
+}
+.trend-up {
+  background: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+.trend-neutral {
+  background: rgba(148, 163, 184, 0.12);
+  color: #94a3b8;
+  border: 1px solid rgba(148, 163, 184, 0.25);
+}
+.trend-good {
+  background: rgba(6, 182, 212, 0.15);
+  color: #22d3ee;
+  border: 1px solid rgba(6, 182, 212, 0.3);
+}
+.trend-alert {
+  background: rgba(239, 68, 68, 0.15);
+  color: #f87171;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
 .btn-triage-sm {
   background: #1e3a8a;
   border: 1px solid #3b82f6;
