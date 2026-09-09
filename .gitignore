@@ -43,7 +43,10 @@ ENV/
 threat_alerts.jsonl
 .DS_Store
 
-# IDE
+# IDE & Local Profiles
 .idea/
 .vscode/
 *.swp
+.app_profile/
+config.yml
+
