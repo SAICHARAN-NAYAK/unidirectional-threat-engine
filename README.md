@@ -107,7 +107,15 @@ Navigate to:
 - Local Enclave: **`http://127.0.0.1:8080`**
 - Public Cloudflare Tunnel: **`https://lower-watts-new-mistakes.trycloudflare.com`**
 
-### 3. Run Ingestion Benchmark Suite
+### 3. Open in Android Studio (HTML WebView Edition)
+Double-click [`Open_In_Android_Studio.bat`](Open_In_Android_Studio.bat) or open Android Studio and choose:
+```
+android_studio_app/
+```
+- **Platform**: Android SDK 35/36 (Kotlin + HTML5/JS WebView)
+- **Features**: Hardware-accelerated WebView, `WebAppInterface` bridge (native toasts, haptic feedback), offline standalone simulation, and live sensor endpoint switcher (`http://10.0.2.2:8080` for emulator).
+
+### 4. Run Ingestion Benchmark Suite
 ```powershell
 python benchmark.py
 ```
@@ -144,4 +152,5 @@ The platform is designed as a hardened, utilitarian cybersecurity operations cen
 6. **💻 Security Analyst Terminal Console**:
    - Monospace tactical shell for ad-hoc operational queries (`status`, `mitre`, `isolate host`, `ja4 analysis`).
    - Powered by air-gapped deterministic intelligence heuristics with zero external cloud dependencies.
+
 

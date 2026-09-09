@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">CYBERSHIELD Enclave</string>
+    <string name="connecting">Connecting to Threat Enclave...</string>
+    <string name="offline_mode">Standalone Air-Gap Mode Active</string>
+    <string name="server_settings">Sensor Endpoint Settings</string>
+    <string name="reload">Reload</string>
+</resources>
