@@ -439,17 +439,48 @@ body {
   background: var(--bg-surface-hover);
 }
 
-.badge-sev {
+.badge-sev, .sev-pill {
   display: inline-block;
-  padding: 1px 6px;
+  padding: 2px 7px;
   border-radius: 2px;
-  font-size: 0.65rem;
+  font-size: 0.64rem;
+  font-family: var(--font-mono);
   font-weight: 800;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
 }
-.badge-CRITICAL { background: rgba(239, 68, 68, 0.18); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.4); }
-.badge-HIGH { background: rgba(245, 158, 11, 0.18); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.4); }
-.badge-MEDIUM { background: rgba(6, 182, 212, 0.18); color: #22d3ee; border: 1px solid rgba(6, 182, 212, 0.4); }
-.badge-LOW { background: rgba(16, 185, 129, 0.18); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4); }
+.badge-CRITICAL, .pill-critical { background: rgba(239, 68, 68, 0.22); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.5); box-shadow: 0 0 6px rgba(239, 68, 68, 0.2); }
+.badge-HIGH, .pill-high { background: rgba(245, 158, 11, 0.18); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.4); }
+.badge-MEDIUM, .pill-medium { background: rgba(6, 182, 212, 0.18); color: #22d3ee; border: 1px solid rgba(6, 182, 212, 0.4); }
+.badge-LOW, .pill-low { background: rgba(52, 211, 153, 0.16); color: #34d399; border: 1px solid rgba(52, 211, 153, 0.35); }
+.badge-INFO, .pill-info { background: rgba(148, 163, 184, 0.16); color: #94a3b8; border: 1px solid rgba(148, 163, 184, 0.35); }
+
+/* Dynamic Confidence Progress Meter */
+.conf-cell {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.conf-val {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 0.72rem;
+  min-width: 32px;
+}
+.conf-mini-bar {
+  flex: 1;
+  min-width: 44px;
+  max-width: 68px;
+  height: 5px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.conf-mini-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.3s ease;
+}
 
 .btn-triage-sm {
   background: #1e3a8a;

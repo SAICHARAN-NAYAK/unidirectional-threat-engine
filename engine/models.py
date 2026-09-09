@@ -9,6 +9,7 @@ import uuid
 from typing import Dict, Any, Optional
 
 class ThreatSeverity:
+    INFO = "INFO"
     LOW = "LOW"
     MEDIUM = "MEDIUM"
     HIGH = "HIGH"
@@ -21,6 +22,13 @@ class ThreatClass:
     DGA_OR_DNS_TUNNEL = "DGA_OR_DNS_TUNNEL"
     SUSPICIOUS_JA4_TLS = "SUSPICIOUS_JA4_TLS"
     UDP_AMPLIFICATION_FLOOD = "UDP_AMPLIFICATION_FLOOD"
+    # Deviant, human error, and authentic enterprise events
+    AUTH_FAILURE = "SSH_AUTH_FAILED"
+    POLICY_VIOLATION = "EXPIRED_TLS_CERT"
+    BENIGN_AUDIT = "SYSTEM_AUDIT_LOG"
+    ANOMALOUS_USER_AGENT = "ANOMALOUS_USER_AGENT"
+    DEV_ERROR = "DEV_SCRIPT_CRASH"
+    DNS_NXDOMAIN = "DNS_QUERY_NXDOMAIN"
 
 class PacketMetadata:
     __slots__ = (
@@ -113,9 +121,12 @@ class ThreatAlert:
         self.evidence = evidence
 
     def to_dict(self) -> Dict[str, Any]:
+        ms = int((self.timestamp % 1) * 1000)
+        time_str = f"{time.strftime('%H:%M:%S', time.localtime(self.timestamp))}.{ms:03d}"
         return {
             "alert_id": self.alert_id,
             "timestamp": self.timestamp,
+            "timestamp_str": time_str,
             "threat_class": self.threat_class,
             "severity": self.severity,
             "confidence_score": self.confidence_score,
@@ -131,8 +142,9 @@ class ThreatAlert:
     def to_cef(self) -> str:
         """ArcSight Common Event Format (CEF) representation for SIEM ingestion."""
         sev_map = {
+            ThreatSeverity.INFO: "1",
             ThreatSeverity.LOW: "3",
-            ThreatSeverity.MEDIUM: "6",
+            ThreatSeverity.MEDIUM: "5",
             ThreatSeverity.HIGH: "8",
             ThreatSeverity.CRITICAL: "10"
         }

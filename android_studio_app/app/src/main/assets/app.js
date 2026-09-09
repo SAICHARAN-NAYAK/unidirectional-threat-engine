@@ -287,7 +287,7 @@ function handleTelemetryUpdate(data) {
 
   const sev = data.severity_breakdown || {};
   if (metricSeveritySummary) {
-    metricSeveritySummary.textContent = `${sev.CRITICAL || 0} Crit / ${sev.HIGH || 0} High`;
+    metricSeveritySummary.textContent = `${sev.CRITICAL || 0} Crit / ${sev.HIGH || 0} High / ${sev.MEDIUM || 0} Med / ${sev.LOW || 0} Low / ${sev.INFO || 0} Info`;
   }
 
   if (diodeLed) {
@@ -316,21 +316,44 @@ function renderAlertsTable() {
   if (!alertsTableBody) return;
 
   alertsTableBody.innerHTML = currentAlerts.map(a => {
-    const timeStr = new Date(a.timestamp * 1000).toTimeString().substring(0, 8);
-    const targetFlow = `${a.src_ip} &rarr; ${a.dst_ip}${a.dst_port ? ":" + a.dst_port : ""}`;
-    const confPct = Math.round((a.confidence_score || 0.95) * 100);
+    let timeStr = a.timestamp_str;
+    if (!timeStr) {
+      const d = new Date(a.timestamp * 1000);
+      const ms = Math.floor(((a.timestamp % 1) + 1) % 1 * 1000).toString().padStart(3, "0");
+      timeStr = `${d.toTimeString().substring(0, 8)}.${ms}`;
+    }
 
-    let sevClass = "pill-medium";
+    const targetFlow = `${a.src_ip} &rarr; ${a.dst_ip}${a.dst_port ? ":" + a.dst_port : ""}`;
+    const confScore = a.confidence_score !== undefined ? a.confidence_score : 0.85;
+    const confPct = Math.round(confScore * 100);
+
+    let confColor = "#38bdf8";
+    if (confPct >= 85) confColor = "#f87171";
+    else if (confPct >= 70) confColor = "#fbbf24";
+    else if (confPct >= 40) confColor = "#22d3ee";
+    else confColor = "#94a3b8";
+
+    let sevClass = "pill-low";
     if (a.severity === "CRITICAL") sevClass = "pill-critical";
     else if (a.severity === "HIGH") sevClass = "pill-high";
+    else if (a.severity === "MEDIUM") sevClass = "pill-medium";
+    else if (a.severity === "LOW") sevClass = "pill-low";
+    else if (a.severity === "INFO") sevClass = "pill-info";
 
     return `
       <tr>
-        <td style="font-family: var(--font-mono); color: var(--text-dim);">${timeStr}</td>
+        <td style="font-family: var(--font-mono); color: var(--text-dim); font-size: 0.65rem;">${timeStr}</td>
         <td><span class="sev-pill ${sevClass}">${a.severity}</span></td>
         <td style="font-weight: 700; color: #fff;">${a.threat_class}</td>
         <td style="font-family: var(--font-mono); font-size: 0.68rem; color: #38bdf8;">${targetFlow}</td>
-        <td style="font-family: var(--font-mono); font-weight: 700;">${confPct}%</td>
+        <td>
+          <div class="conf-cell">
+            <span class="conf-val" style="color: ${confColor};">${confPct}%</span>
+            <div class="conf-mini-bar">
+              <div class="conf-mini-fill" style="width: ${confPct}%; background: ${confColor};"></div>
+            </div>
+          </div>
+        </td>
         <td>
           <div style="display: flex; gap: 4px;">
             <button class="btn-table-action" onclick="triageAlert('${a.alert_id}')">Triage</button>

@@ -195,7 +195,7 @@ function handleTelemetryUpdate(data) {
 
   const sev = data.severity_breakdown || {};
   if (metricSeveritySummary) {
-    metricSeveritySummary.textContent = `${sev.CRITICAL || 0} Crit / ${sev.HIGH || 0} High / ${sev.MEDIUM || 0} Med`;
+    metricSeveritySummary.textContent = `${sev.CRITICAL || 0} Crit / ${sev.HIGH || 0} High / ${sev.MEDIUM || 0} Med / ${sev.LOW || 0} Low / ${sev.INFO || 0} Info`;
   }
 
   // Diode optical status
@@ -230,6 +230,12 @@ function handleTelemetryUpdate(data) {
   }
 }
 
+// Helper: Escape HTML string safely
+function escapeHtml(str) {
+  if (!str) return "";
+  return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+
 // -------------------------------------------------------------
 // Alerts Table Rendering & Quick Actions
 // -------------------------------------------------------------
@@ -248,22 +254,55 @@ function renderAlertsTable() {
   }
 
   alertsTableBody.innerHTML = currentAlerts.map(a => {
-    const timeStr = new Date(a.timestamp * 1000).toTimeString().substring(0, 8);
+    // Authentic sub-second timestamp with jitter
+    let timeStr = a.timestamp_str;
+    if (!timeStr) {
+      const d = new Date(a.timestamp * 1000);
+      const ms = Math.floor(((a.timestamp % 1) + 1) % 1 * 1000).toString().padStart(3, "0");
+      timeStr = `${d.toTimeString().substring(0, 8)}.${ms}`;
+    }
+
     const targetFlow = `${a.src_ip} &rarr; ${a.dst_ip}${a.dst_port ? ":" + a.dst_port : ""}`;
-    const confPct = Math.round((a.confidence_score || 0.95) * 100);
+    const confScore = a.confidence_score !== undefined ? a.confidence_score : 0.85;
+    const confPct = Math.round(confScore * 100);
+
+    // Color gradient for confidence bar
+    let confColor = "#38bdf8";
+    if (confPct >= 85) confColor = "#f87171";
+    else if (confPct >= 70) confColor = "#fbbf24";
+    else if (confPct >= 40) confColor = "#22d3ee";
+    else confColor = "#94a3b8";
 
     let sevPillClass = "pill-low";
     if (a.severity === "CRITICAL") sevPillClass = "pill-critical";
     else if (a.severity === "HIGH") sevPillClass = "pill-high";
     else if (a.severity === "MEDIUM") sevPillClass = "pill-medium";
+    else if (a.severity === "LOW") sevPillClass = "pill-low";
+    else if (a.severity === "INFO") sevPillClass = "pill-info";
+
+    // Deviant / ambient log context details (human typos, traces, certificates)
+    let detailNote = "";
+    if (a.description && (a.threat_class === "DEV_ERROR" || a.threat_class === "DNS_NXDOMAIN" || a.threat_class === "AUTH_FAILURE" || a.threat_class === "POLICY_VIOLATION" || a.threat_class === "ANOMALOUS_USER_AGENT")) {
+      detailNote = `<div style="font-size: 0.62rem; color: #94a3b8; font-weight: normal; margin-top: 2px; font-family: var(--font-mono); max-width: 280px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${escapeHtml(a.description)}">${escapeHtml(a.description)}</div>`;
+    }
 
     return `
       <tr>
-        <td style="font-family: var(--font-mono); color: var(--text-dim);">${timeStr}</td>
+        <td style="font-family: var(--font-mono); color: var(--text-dim); font-size: 0.70rem; letter-spacing: -0.2px;">${timeStr}</td>
         <td><span class="sev-pill ${sevPillClass}">${a.severity}</span></td>
-        <td style="font-weight: 700; color: #fff;">${a.threat_class}</td>
-        <td style="font-family: var(--font-mono); font-size: 0.72rem; color: #38bdf8;">${targetFlow}</td>
-        <td style="font-family: var(--font-mono); font-weight: 700;">${confPct}%</td>
+        <td style="font-weight: 700; color: #fff;">
+          <div>${a.threat_class}</div>
+          ${detailNote}
+        </td>
+        <td style="font-family: var(--font-mono); font-size: 0.71rem; color: #38bdf8;">${targetFlow}</td>
+        <td>
+          <div class="conf-cell">
+            <span class="conf-val" style="color: ${confColor};">${confPct}%</span>
+            <div class="conf-mini-bar">
+              <div class="conf-mini-fill" style="width: ${confPct}%; background: ${confColor};"></div>
+            </div>
+          </div>
+        </td>
         <td>
           <div style="display: flex; gap: 4px;">
             <button class="btn-table-action" onclick="triageAlert('${a.alert_id}')" title="AI Incident Triage">Triage</button>

@@ -91,6 +91,87 @@ MITRE_ATTACK_MAPPING: Dict[str, Dict[str, Any]] = {
             "Execute EDR live response to inspect binary or DLL establishing the TLS handshake",
             "Blacklist adversary C2 IP and certificate serial number"
         ]
+    },
+    ThreatClass.AUTH_FAILURE: {
+        "tactic": "Credential Access",
+        "tactic_id": "TA0006",
+        "technique": "Brute Force: Password Guessing",
+        "technique_id": "T1110.001",
+        "subtechnique": "SSH Password Guessing",
+        "threat_actors": ["Internal Misconfiguration", "Automated Script Prober", "APT29 (Cozy Bear)"],
+        "severity_rationale": "Multiple consecutive failed password authentications over SSH daemon from internal workstation.",
+        "defense_remediation": [
+            "Verify identity of user or owner of workstation IP",
+            "Enforce public-key authentication and disable SSH password auth (`PasswordAuthentication no`)",
+            "Temporarily block source IP with fail2ban jail (maxretry = 3)",
+            "Audit /var/log/auth.log for targeted username pattern"
+        ]
+    },
+    ThreatClass.POLICY_VIOLATION: {
+        "tactic": "Defense Evasion",
+        "tactic_id": "TA0005",
+        "technique": "Subvert Trust Controls: Install Root Certificate",
+        "technique_id": "T1553",
+        "subtechnique": "Expired Enterprise Certificate",
+        "threat_actors": ["Human Maintenance Oversight", "Internal Ops Certificate Expiry"],
+        "severity_rationale": "Internal service TLS certificate expired, triggering client trust warnings and breaking encrypted transport guarantees.",
+        "defense_remediation": [
+            "Renew and deploy X.509 certificate via automated ACME / Let's Encrypt / Certbot",
+            "Audit internal PKI certificate transparency log",
+            "Update reverse proxy certificate bundle on Nginx / HAProxy"
+        ]
+    },
+    ThreatClass.ANOMALOUS_USER_AGENT: {
+        "tactic": "Discovery",
+        "tactic_id": "TA0007",
+        "technique": "Software Discovery",
+        "technique_id": "T1518",
+        "subtechnique": "Legacy User-Agent Probing",
+        "threat_actors": ["Legacy Automation Script", "Recon Bot Prober"],
+        "severity_rationale": "Unauthenticated client communicating using non-standard or legacy User-Agent string.",
+        "defense_remediation": [
+            "Block deprecated user agents at WAF / Reverse Proxy layer",
+            "Verify automation pipeline credentials"
+        ]
+    },
+    ThreatClass.DNS_NXDOMAIN: {
+        "tactic": "Reconnaissance",
+        "tactic_id": "TA0043",
+        "technique": "Active Scanning: Wordlist DNS Lookup",
+        "technique_id": "T1595",
+        "subtechnique": "Non-Existent Domain Typo Lookup",
+        "threat_actors": ["Human Operator Typo", "Subdomain Enumeration"],
+        "severity_rationale": "DNS query failed with RCODE 3 (NXDOMAIN); indicative of either operator typo or automated dictionary reconnaissance.",
+        "defense_remediation": [
+            "Monitor recursive resolver queries for rapid burst NXDOMAIN patterns",
+            "Verify client endpoint DNS configuration"
+        ]
+    },
+    ThreatClass.DEV_ERROR: {
+        "tactic": "Execution",
+        "tactic_id": "TA0002",
+        "technique": "Native API Execution",
+        "technique_id": "T1106",
+        "subtechnique": "Application Socket Reset Exception",
+        "threat_actors": ["Developer Bug", "Abrupt Socket Closure"],
+        "severity_rationale": "Internal microservice socket terminated abruptly with TCP RST.",
+        "defense_remediation": [
+            "Inspect microservice logs and socket connection pool configuration",
+            "Ensure graceful timeout handling on backend reverse proxy"
+        ]
+    },
+    ThreatClass.BENIGN_AUDIT: {
+        "tactic": "Initial Access",
+        "tactic_id": "TA0001",
+        "technique": "Valid Accounts: Domain Accounts",
+        "technique_id": "T1078.002",
+        "subtechnique": "Kerberos Ticket-Granting Service (TGS) Request",
+        "threat_actors": ["Authorized Domain User", "Active Directory Service"],
+        "severity_rationale": "Standard routine Kerberos TGT/TGS authentication exchange on Domain Controller.",
+        "defense_remediation": [
+            "No action required (Normal operational baseline traffic)",
+            "Retain event for SIEM compliance audit trail"
+        ]
     }
 }
 
