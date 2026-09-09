@@ -90,29 +90,58 @@ A passive, air-gapped network threat detection engine and real-time Cyber Operat
 
 ## Quick Start Guide
 
-### 1. Run Benchmark & Verification Suite
+### 1. Launch Desktop Application (Native Mode)
+Double-click the Windows batch runner or execute from PowerShell:
 ```powershell
-python benchmark.py
+.\Launch_ThreatEnclave_App.bat
+# Or via Python directly:
+python app_desktop.py
 ```
-*Validates that sustained ingestion exceeds 25,000–50,000 pkts/sec and runs detection validation on all 5 threat vectors.*
+*Spawns a dedicated standalone application window modeled after CrowdStrike Falcon and Palo Alto Cortex XDR without browser navigation bars or consumer AI tropes.*
 
-### 2. Start the Real-Time SOC Web Dashboard
+### 2. Run Backend Server in Headless / Web Mode
 ```powershell
 python run_server.py
 ```
-Open your browser and navigate to:
-**`http://127.0.0.1:8080`**
+Navigate to:
+- Local Enclave: **`http://127.0.0.1:8080`**
+- Public Cloudflare Tunnel: **`https://lower-watts-new-mistakes.trycloudflare.com`**
+
+### 3. Run Ingestion Benchmark Suite
+```powershell
+python benchmark.py
+```
+*Validates that sustained packet processing exceeds 25,000–50,000 pkts/sec (achieving >350k–550k pps) and tests 100% attribution across all threat classes.*
 
 ---
 
-## Interactive Dashboard Features
+## Enterprise Application Architecture & Workspace Views
 
-- **Rate Controller**: Adjust the synthetic flow generation rate from 1,000 to 60,000+ pps using the slider or quick preset buttons (`5k`, `25k`, `50k`).
-- **Attack Injector**: Trigger simulated attacks on demand:
-  - `⚡ SYN Flood Burst`: Sends 180 spoofed packets targeting port 80.
-  - `📡 C2 Beacon Pulse`: Simulates high-precision periodic C2 heartbeats ($CV < 0.05$).
-  - `🔍 Recon Port Scan`: Probes 40 distinct ports against target `10.0.0.5`.
-  - `🌐 DGA DNS Tunnel`: Injects high-entropy encoded subdomain queries.
-  - `🛡️ Malicious JA4 TLS`: Sends a Cobalt Strike TLS Client Hello handshake.
-- **Offline PCAP Replay**: Click `📼 Replay Test PCAP` or drag-and-drop your own `.pcap` files.
-- **Forensic Inspector**: Click `Inspect` on any alert row to view quantitative metrics (Shannon entropy, beacon sample size, CV jitter, and CEF SIEM format).
+The platform is designed as a hardened, utilitarian cybersecurity operations center (SOC):
+
+1. **📡 Operations & Stream**:
+   - 60fps HTML5 Canvas threat radar with laser fanout visualizer.
+   - Real-time ingress rate slider (1k–60k pps) and attack vector injector grid (SYN flood, C2 beacon, scan, DGA, JA4 TLS, PCAP replay).
+   - Real-time alert feed with instant Triage, Dissection, and Rule Synthesis triggers.
+
+2. **🛡️ MITRE ATT&CK Enterprise Matrix**:
+   - Complete 14-tactic Enterprise Matrix (v15) dynamically populated by passive sensor telemetry.
+   - Active adversary technique illumination with correlated alert counters and tactic mappings.
+
+3. **🔍 Packet Dissector (Wireshark-Grade)**:
+   - Live frame byte stream dissector with deep protocol tree hierarchy (Frame, Ethernet II, IPv4, TCP/UDP/TLS).
+   - 16-byte offset hex dump viewer with decoded ASCII representation.
+
+4. **🔬 Autonomous AI Threat Triage Dossier**:
+   - Executive incident summaries with adversary threat actor attribution (e.g. Cobalt Strike, Mirai, OilRig).
+   - Tactical blast radius modeling and lateral movement risk calculation.
+   - Automated containment playbooks with priority-ranked mitigation procedures.
+
+5. **⚡ Mitigation Rule Synthesis**:
+   - Real-time synthesis of enforcement rules tailored to detected threat indicators.
+   - Outputs ready-to-deploy syntax for Linux `iptables`, `nftables`, `Suricata` IDS signatures, `Snort` IPS rules, and `pfSense` firewall XML snippets with one-click clipboard copying.
+
+6. **💻 Security Analyst Terminal Console**:
+   - Monospace tactical shell for ad-hoc operational queries (`status`, `mitre`, `isolate host`, `ja4 analysis`).
+   - Powered by air-gapped deterministic intelligence heuristics with zero external cloud dependencies.
+
