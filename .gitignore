@@ -49,4 +49,6 @@ threat_alerts.jsonl
 *.swp
 .app_profile/
 config.yml
+.gradle/
+*.lock
 

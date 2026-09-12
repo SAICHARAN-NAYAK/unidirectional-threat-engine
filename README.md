@@ -104,8 +104,9 @@ python app_desktop.py
 python run_server.py
 ```
 Navigate to:
-- Local Enclave: **`http://127.0.0.1:8080`**
-- Public Cloudflare Tunnel: **`https://lower-watts-new-mistakes.trycloudflare.com`**
+- **Local Enclave**: `http://127.0.0.1:8080`
+- **Global Public Cloudflare Tunnel (Active Live)**: [https://red-avi-object-email.trycloudflare.com](https://red-avi-object-email.trycloudflare.com)
+- **GitHub Pages Global Edge Deployment**: [https://saicharan-nayak.github.io/unidirectional-threat-engine/](https://saicharan-nayak.github.io/unidirectional-threat-engine/)
 
 ### 3. Open in Android Studio (HTML WebView Edition)
 Double-click [`Open_In_Android_Studio.bat`](Open_In_Android_Studio.bat) or open Android Studio and choose:
