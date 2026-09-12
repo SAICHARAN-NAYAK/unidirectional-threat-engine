@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CYBERSHIELD // Enterprise Architecture Deck (5 Slides)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b0f19;
+      --panel: #111827;
+      --card: #172135;
+      --card-border: #25324e;
+      --cyan: #00e5ff;
+      --blue: #3b82f6;
+      --red: #ff4757;
+      --green: #10b981;
+      --amber: #f59e0b;
+      --text: #f3f4f6;
+      --muted: #9ca3af;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      user-select: none;
+    }
+
+    /* Top Presentation Bar */
+    header {
+      background: rgba(17, 24, 39, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--card-border);
+      padding: 12px 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 100;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+    }
+
+    .brand-icon {
+      color: var(--cyan);
+      font-size: 1.25rem;
+    }
+
+    .brand-title {
+      color: var(--text);
+      font-size: 1.05rem;
+    }
+
+    .brand-pill {
+      background: rgba(0, 229, 255, 0.12);
+      color: var(--cyan);
+      border: 1px solid rgba(0, 229, 255, 0.3);
+      font-size: 0.72rem;
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+
+    .controls {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .btn {
+      background: var(--card);
+      color: var(--text);
+      border: 1px solid var(--card-border);
+      padding: 6px 14px;
+      border-radius: 6px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.82rem;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn:hover {
+      background: rgba(0, 229, 255, 0.15);
+      border-color: var(--cyan);
+      color: var(--cyan);
+    }
+
+    .slide-indicator {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.88rem;
+      color: var(--muted);
+      min-width: 80px;
+      text-align: center;
+    }
+
+    /* Deck Viewport */
+    .deck-viewport {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      position: relative;
+    }
+
+    .slide-container {
+      width: 100%;
+      max-width: 1280px;
+      aspect-ratio: 16 / 9;
+      background: var(--panel);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.6), 0 0 40px rgba(0, 229, 255, 0.05);
+      padding: 44px 54px;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .slide {
+      display: none;
+      flex-direction: column;
+      height: 100%;
+      animation: fadeIn 0.3s ease-in-out forwards;
+    }
+
+    .slide.active {
+      display: flex;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .slide-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--cyan);
+      letter-spacing: 0.08em;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+    }
+
+    .slide-title {
+      font-size: 1.85rem;
+      font-weight: 800;
+      color: var(--text);
+      letter-spacing: -0.02em;
+      margin-bottom: 4px;
+    }
+
+    .slide-subtitle {
+      font-size: 0.96rem;
+      color: var(--muted);
+      margin-bottom: 24px;
+    }
+
+    /* Grid Layouts */
+    .grid-4 {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      flex: 1;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      flex: 1;
+    }
+
+    .grid-2x2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      gap: 16px;
+      flex: 1;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 18px 20px;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+
+    .card:hover {
+      border-color: rgba(0, 229, 255, 0.4);
+      transform: translateY(-2px);
+    }
+
+    .card-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.92rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .card ul {
+      list-style: none;
+      font-size: 0.84rem;
+      line-height: 1.55;
+      color: #e2e8f0;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .card li::before {
+      content: "• ";
+      color: var(--cyan);
+      font-weight: bold;
+    }
+
+    /* Pipeline Flowchart (Slide 2) */
+    .flow-pipeline {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 22px;
+      background: rgba(11, 15, 25, 0.5);
+      padding: 14px 18px;
+      border-radius: 8px;
+      border: 1px solid var(--card-border);
+    }
+
+    .flow-node {
+      flex: 1;
+      background: var(--card);
+      border: 1px solid var(--cyan);
+      border-radius: 6px;
+      padding: 10px;
+      text-align: center;
+    }
+
+    .flow-node.blue { border-color: var(--blue); }
+    .flow-node.amber { border-color: var(--amber); }
+    .flow-node.green { border-color: var(--green); }
+
+    .node-header {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.74rem;
+      font-weight: 800;
+      color: var(--cyan);
+      margin-bottom: 4px;
+    }
+    .node-header.blue { color: var(--blue); }
+    .node-header.amber { color: var(--amber); }
+    .node-header.green { color: var(--green); }
+
+    .node-desc {
+      font-size: 0.72rem;
+      color: var(--muted);
+      line-height: 1.3;
+    }
+
+    .flow-arrow {
+      color: var(--cyan);
+      font-size: 1.1rem;
+      font-weight: bold;
+    }
+
+    /* Code Blocks in Cards */
+    .code-snippet {
+      background: rgba(0,0,0,0.45);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 4px;
+      padding: 8px 10px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.74rem;
+      color: #93c5fd;
+      margin-top: 8px;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+
+    /* Hero Slide 1 Elements */
+    .hero-wrap {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      height: 100%;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(0, 229, 255, 0.1);
+      border: 1px solid rgba(0, 229, 255, 0.3);
+      color: var(--cyan);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 999px;
+      width: fit-content;
+      margin-bottom: 14px;
+    }
+
+    .hero-h1 {
+      font-size: 3.2rem;
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      color: #ffffff;
+      margin-bottom: 8px;
+    }
+
+    .hero-h2 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--cyan);
+      margin-bottom: 16px;
+      letter-spacing: -0.01em;
+    }
+
+    .hero-desc {
+      font-size: 1.05rem;
+      color: var(--muted);
+      max-width: 880px;
+      line-height: 1.6;
+      margin-bottom: 28px;
+    }
+
+    /* Bottom Status Bar */
+    footer {
+      padding: 10px 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid var(--card-border);
+      background: rgba(17, 24, 39, 0.85);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+
+    .footer-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .footer-right a {
+      color: var(--cyan);
+      text-decoration: none;
+    }
+
+    .footer-right a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="brand">
+      <span class="brand-icon">🛡️</span>
+      <span class="brand-title">CYBERSHIELD</span>
+      <span class="brand-pill">ARCHITECTURE DECK</span>
+    </div>
+
+    <div class="controls">
+      <button class="btn" id="prevBtn" title="Previous Slide (← / Left Arrow)">◀ PREV</button>
+      <span class="slide-indicator" id="slideIndicator">SLIDE 1 / 5</span>
+      <button class="btn" id="nextBtn" title="Next Slide (→ / Right Arrow / Space)">NEXT ▶</button>
+      <button class="btn" id="fsBtn" title="Toggle Fullscreen (F)">⛶ FULLSCREEN</button>
+      <a href="CYBERSHIELD_Architecture_Deck.pptx" download class="btn" style="color: var(--green); border-color: var(--green);">📥 DOWNLOAD .PPTX</a>
+    </div>
+  </header>
+
+  <!-- Deck Viewport -->
+  <main class="deck-viewport">
+    <div class="slide-container" id="slideContainer">
+
+      <!-- ================= SLIDE 1 ================= -->
+      <section class="slide active" id="slide-1">
+        <div class="hero-wrap">
+          <div class="hero-badge">● AIR-GAPPED DATA DIODE ENCLAVE v2.4</div>
+          <h1 class="hero-h1">CYBERSHIELD</h1>
+          <h2 class="hero-h2">Unidirectional Threat Detection Engine & Enterprise Web SOC</h2>
+          <p class="hero-desc">
+            High-performance passive cyber threat attribution operating over physical data diodes at 50,000+ packets/sec.
+            Engineered with 16-shard zero-contention partitioning, statistical AI anomaly detection, and automated containment.
+          </p>
+
+          <div class="grid-4">
+            <div class="card">
+              <div class="card-title" style="color: var(--cyan);">OPTICAL DATA DIODE</div>
+              <ul>
+                <li>Physical Tx disabled (Rx = 1)</li>
+                <li>Mathematical stealth guarantee</li>
+                <li>Zero backchannel exploitation</li>
+                <li>Air-gapped boundary defense</li>
+              </ul>
+            </div>
+
+            <div class="card">
+              <div class="card-title" style="color: var(--blue);">16-SHARD INGRESS</div>
+              <ul>
+                <li>50,000+ pps sustained ingress</li>
+                <li>Lock-free micro-batch routing</li>
+                <li>Zero-allocation __slots__ model</li>
+                <li>Sub-110ms sliding window SLA</li>
+              </ul>
+            </div>
+
+            <div class="card">
+              <div class="card-title" style="color: var(--amber);">AUTONOMOUS AI & MITRE</div>
+              <ul>
+                <li>14 enterprise tactics mapped</li>
+                <li>C2 beacon detection (CV &lt; 0.15)</li>
+                <li>Fast Shannon entropy (&gt;3.65)</li>
+                <li>Dynamic multi-firewall synthesis</li>
+              </ul>
+            </div>
+
+            <div class="card">
+              <div class="card-title" style="color: var(--green);">CROSS-PLATFORM SOC</div>
+              <ul>
+                <li>Real-time WebSocket stream</li>
+                <li>Live Cloudflare HTTPS tunnel</li>
+                <li>Permanent 24/7 GitHub Pages</li>
+                <li>Native Android Studio WebView</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= SLIDE 2 ================= -->
+      <section class="slide" id="slide-2">
+        <div class="slide-tag">CORE ARCHITECTURE & INGESTION PIPELINE</div>
+        <h2 class="slide-title">16-Shard Hash Partitioning & Stream Pipeline</h2>
+        <p class="slide-subtitle">Hardware optical diode isolation feeding micro-batched, lock-partitioned analytical queues.</p>
+
+        <!-- Pipeline Flowchart -->
+        <div class="flow-pipeline">
+          <div class="flow-node">
+            <div class="node-header">1. PHYSICAL INGRESS</div>
+            <div class="node-desc">Mirror TAP / SPAN<br>Optical Diode Rx Only<br>Tx = 0 Physical Cut</div>
+          </div>
+          <div class="flow-arrow">➔</div>
+          <div class="flow-node blue">
+            <div class="node-header blue">2. BINARY PARSER</div>
+            <div class="node-desc">Zero-Copy PCAP Unpack<br>IPv4/IPv6 Wire Decode<br>TCP Flags & Raw UDP</div>
+          </div>
+          <div class="flow-arrow">➔</div>
+          <div class="flow-node amber">
+            <div class="node-header amber">3. MICRO-BATCHER</div>
+            <div class="node-desc">Batch Size: 250 pkts<br>Tuple Hash Routing<br>(hash(src) & 0x7F)%16</div>
+          </div>
+          <div class="flow-arrow">➔</div>
+          <div class="flow-node">
+            <div class="node-header">4. 16 SHARD CORES</div>
+            <div class="node-desc">16 Independent Locks<br>Ring Buffers (maxlen=250)<br>Zero Thread Contention</div>
+          </div>
+          <div class="flow-arrow">➔</div>
+          <div class="flow-node green">
+            <div class="node-header green">5. ROLLING PRUNER</div>
+            <div class="node-desc">3.0s Sliding Window<br>O(1) Popleft Eviction<br>Sub-110ms Triage SLA</div>
+          </div>
+        </div>
+
+        <div class="grid-3">
+          <div class="card">
+            <div class="card-title" style="color: var(--cyan);">ZERO-CONTENTION CONCURRENCY</div>
+            <ul>
+              <li><strong>Lock Partitioning:</strong> Divides state into 16 discrete EnclaveShard instances.</li>
+              <li><strong>Lock Amortization:</strong> Groups micro-batches by target shard prior to acquisition, reducing lock requests from O(B) to O(16).</li>
+              <li><strong>Benchmarked Performance:</strong> Sustained 25,000–50,000+ pps on commodity CPUs without frame drops.</li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <div class="card-title" style="color: var(--blue);">LOW-ALLOCATION MEMORY MODEL</div>
+            <ul>
+              <li><strong>__slots__ Optimization:</strong> Python structs eliminate dynamic dictionary allocation overhead.</li>
+              <li><strong>Bounded Deques:</strong> In-memory sliding windows (maxlen=250) prevent memory leaks under multi-million packet surges.</li>
+              <li><strong>Zero GC Spikes:</strong> Constant memory footprint guarantees predictable sub-millisecond execution.</li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <div class="card-title" style="color: var(--green);">UNIDIRECTIONAL DIODE GUARANTEE</div>
+            <ul>
+              <li><strong>Physical Optical Isolation:</strong> Monitored fiber laser physically severed; receive channel strictly listen-only.</li>
+              <li><strong>Passive Packet Dissection:</strong> Zero TCP RST or ICMP responses emitted back onto monitored network.</li>
+              <li><strong>Complete Stealth:</strong> Adversaries cannot detect, ping, or target the sensor enclave.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= SLIDE 3 ================= -->
+      <section class="slide" id="slide-3">
+        <div class="slide-tag">ANALYTICAL CORE & MATHEMATICAL FORMULATIONS</div>
+        <h2 class="slide-title">Mathematical Threat Detection: AI/ML, Entropy & JA4</h2>
+        <p class="slide-subtitle">Deterministic models operating concurrently across sliding windows for precision threat attribution.</p>
+
+        <div class="grid-2x2">
+          <div class="card">
+            <div class="card-title" style="color: var(--amber);">1. BOTNET C2 BEACONING (INTER-ARRIVAL TIME & CV)</div>
+            <ul>
+              <li><strong>Theory:</strong> Automated malware implants maintain periodic heartbeats; human traffic is chaotic.</li>
+              <li><strong>Formula:</strong> <code>CV = σ / μ</code> (standard deviation of arrival deltas divided by mean interval).</li>
+              <li><strong>Detection Boundary:</strong> <code>CV &lt; 0.15</code> identifies rhythmic callbacks (Cobalt Strike / Sliver).</li>
+              <li><strong>Confidence Formulation:</strong> <code>Score = min(0.99, 1.0 - CV)</code>.</li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <div class="card-title" style="color: var(--red);">2. DNS TUNNELING & DGA (FAST SHANNON ENTROPY)</div>
+            <ul>
+              <li><strong>Theory:</strong> Base32/64 exfiltration payloads pack high information density into subdomains.</li>
+              <li><strong>Formula:</strong> <code>H(X) = log₂(L) - (1/L) * Σ count(c) * log₂(count(c))</code>.</li>
+              <li><strong>Table Acceleration:</strong> Accelerated via pre-computed <code>_LOG2_CACHE[k]</code> lookup table in O(N).</li>
+              <li><strong>Detection Boundary:</strong> <code>H(X) &gt; 3.65</code> identifies encoded data tunnels and DGA rendezvous.</li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <div class="card-title" style="color: var(--cyan);">3. JA4 TLS CLIENT FINGERPRINTING (RFC 8701)</div>
+            <ul>
+              <li><strong>Theory:</strong> Identifies offensive C2 implants over encrypted TLS without payload decryption.</li>
+              <li><strong>GREASE Stripping:</strong> <code>(val & 0x0F0F) == 0x0A0A</code> bitmask eliminates randomized browser noise.</li>
+              <li><strong>Canonical String:</strong> <code>JA4_A_B_C</code> (Header + Sorted Ciphers SHA-256 + Extensions SHA-256).</li>
+              <li><strong>Example Signature:</strong> <code>t13d1516h2_8daaf6152771_be40b441a884</code> (Cobalt Strike Malleable C2).</li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <div class="card-title" style="color: var(--blue);">4. VOLUMETRIC SYN FLOOD & PORT RECON SCAN</div>
+            <ul>
+              <li><strong>Volumetric Inundation:</strong> Cross-shard destination aggregation; &gt;75% SYN ratio triggers P0 alert.</li>
+              <li><strong>Fanout Cardinality:</strong> Tracks distinct destinations and ports probed by source IP in 3.0s window.</li>
+              <li><strong>Recon Boundary:</strong> Distinct ports &gt;25 or targets &gt;15 identifies active port sweep.</li>
+              <li><strong>Jitter Interleaving:</strong> Microsecond pseudo-random delays break artificial looping patterns.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= SLIDE 4 ================= -->
+      <section class="slide" id="slide-4">
+        <div class="slide-tag">AUTONOMOUS AI SECURITY & CONTAINMENT</div>
+        <h2 class="slide-title">MITRE ATT&CK Matrix & Dynamic Firewall Rule Synthesis</h2>
+        <p class="slide-subtitle">Deterministic correlation, blast radius modeling, and instant multi-platform rule generation.</p>
+
+        <div class="grid-3">
+          <div class="card">
+            <div class="card-title" style="color: var(--cyan);">MITRE ATT&CK MATRIX</div>
+            <ul>
+              <li><strong>14 Enterprise Tactics Covered:</strong> TA0043 (Recon) through TA0040 (Impact).</li>
+              <li><strong>Technique Mapping:</strong> Direct binding to T1498.001 (SYN Flood), T1071.001 (Web C2), T1046 (Port Recon), T1568.002 (DGA), T1573.002 (TLS C2).</li>
+              <li><strong>Attribution Profiles:</strong> Correlates threat observables to APT28, Mirai, Cobalt Strike, and LockBit affiliates.</li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <div class="card-title" style="color: var(--amber);">BLAST RADIUS & PLAYBOOKS</div>
+            <ul>
+              <li><strong>Asset Criticality:</strong> Scores risk exposure across Domain Controllers (ad-dc01), Databases (pgsql-db01), and Workstations.</li>
+              <li><strong>Containment Playbooks:</strong> Step-by-step P0/P1/P2 mitigation steps (SYN cookies, route blackholing, EDR response).</li>
+              <li><strong>Merkle Audit Ledger:</strong> SHA-256 hash-chaining prevents retroactive tampering with SOC forensic evidence.</li>
+              <li><strong>LLM Triage Hook:</strong> Optional Google Gemini API integration for semantic threat reporting.</li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <div class="card-title" style="color: var(--green);">DYNAMIC RULE SYNTHESIS</div>
+            <ul>
+              <li>Instant multi-target firewall compilation:</li>
+            </ul>
+            <div class="code-snippet"># 1. Linux IPTables
+iptables -A INPUT -p tcp --dport 443 -m hashlimit --hashlimit-above 50/sec -j DROP
+
+# 2. Linux NFTables
+table inet filter { chain input { tcp flags syn meter syn-meter { ip saddr limit rate over 50/sec } drop } }
+
+# 3. Suricata IDS Rule
+alert tcp any any -> $DST $PORT (msg:"CYBERSHIELD Inbound Flood"; flags:S; count 100; sid:2000001;)</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= SLIDE 5 ================= -->
+      <section class="slide" id="slide-5">
+        <div class="slide-tag">ENTERPRISE OPERATIONS & GLOBAL DEPLOYMENT</div>
+        <h2 class="slide-title">Enterprise Web SOC Console & Multi-Platform Delivery</h2>
+        <p class="slide-subtitle">Accessible globally over HTTPS, permanent edge hosting, and native Android Studio integration.</p>
+
+        <div class="grid-2x2">
+          <div class="card">
+            <div class="card-title" style="color: var(--cyan);">ENTERPRISE WEB SOC CONSOLE</div>
+            <ul>
+              <li><strong>Authentic Cyber Atmosphere:</strong> Dark obsidian UI, glassmorphic panels, and DEFCON status badge.</li>
+              <li><strong>Sub-Second Time Interleaving:</strong> Millisecond jitter timestamps break artificial looping patterns.</li>
+              <li><strong>Corporate Asset Attribution:</strong> Maps raw IPs to enterprise DNS hostnames (wkst-*.corp, ad-dc01.corp).</li>
+              <li><strong>Real-Time Threat Radar:</strong> SVG canvas visualizing live network ingress and fanout connections.</li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <div class="card-title" style="color: var(--green);">GLOBAL HTTPS CLOUDFLARE TUNNEL</div>
+            <ul>
+              <li><strong>Worldwide Live Link:</strong> <a href="https://red-avi-object-email.trycloudflare.com" target="_blank" style="color: var(--green);">https://red-avi-object-email.trycloudflare.com</a></li>
+              <li><strong>Zero-Barrier Access:</strong> No firewall port forwarding or public IP exposure required.</li>
+              <li><strong>Real-Time Bi-Directional WebSocket:</strong> Sub-millisecond telemetry stream direct to any device.</li>
+              <li><strong>Interactive Threat Injection:</strong> Trigger live SYN floods, C2 beacon pulses, and port recon scans.</li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <div class="card-title" style="color: var(--blue);">PERMANENT EDGE WEB (GITHUB PAGES)</div>
+            <ul>
+              <li><strong>Permanent 24/7 Hosting:</strong> <a href="https://saicharan-nayak.github.io/unidirectional-threat-engine/" target="_blank" style="color: var(--blue);">https://saicharan-nayak.github.io/unidirectional-threat-engine/</a></li>
+              <li><strong>Autonomous Dual-Mode:</strong> Automatically connects to live backend WebSocket if online.</li>
+              <li><strong>Zero-Server Fallback:</strong> Auto-engages high-fidelity client-side simulation engine if offline.</li>
+              <li><strong>Automated CI/CD:</strong> Deployed automatically via .github/workflows/deploy-pages.yml on push.</li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <div class="card-title" style="color: var(--amber);">ANDROID STUDIO NATIVE APP & REPO</div>
+            <ul>
+              <li><strong>Android Studio Project:</strong> android_studio_app/ native WebView wrapper with full touch controls.</li>
+              <li><strong>One-Click Launcher:</strong> Open_In_Android_Studio.bat auto-detects active Android Studio executable.</li>
+              <li><strong>SIEM Integrations:</strong> Background worker exporting ArcSight CEF, RFC 5424 Syslog, and Webhooks.</li>
+              <li><strong>Open Source GitHub Repo:</strong> SAICHARAN-NAYAK/unidirectional-threat-engine (main branch).</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-left">
+      <span>CYBERSHIELD ENCLAVE v2.4</span>
+      <span>•</span>
+      <span>STATUS: OPERATIONAL</span>
+      <span>•</span>
+      <span>USE KEYS: [←] PREV | [→] / [SPACE] NEXT | [F] FULLSCREEN</span>
+    </div>
+    <div class="footer-right">
+      <a href="index.html">RETURN TO LIVE OPERATIONS CONSOLE ➔</a>
+    </div>
+  </footer>
+
+  <script>
+    let currentSlide = 1;
+    const totalSlides = 5;
+
+    const slideIndicator = document.getElementById("slideIndicator");
+    const prevBtn = document.getElementById("prevBtn");
+    const nextBtn = document.getElementById("nextBtn");
+    const fsBtn = document.getElementById("fsBtn");
+    const slideContainer = document.getElementById("slideContainer");
+
+    function showSlide(n) {
+      if (n < 1) n = 1;
+      if (n > totalSlides) n = totalSlides;
+      currentSlide = n;
+
+      for (let i = 1; i <= totalSlides; i++) {
+        const slide = document.getElementById(`slide-${i}`);
+        if (slide) {
+          slide.classList.toggle("active", i === currentSlide);
+        }
+      }
+
+      slideIndicator.textContent = `SLIDE ${currentSlide} / ${totalSlides}`;
+      prevBtn.style.opacity = currentSlide === 1 ? "0.4" : "1";
+      nextBtn.style.opacity = currentSlide === totalSlides ? "0.4" : "1";
+    }
+
+    prevBtn.addEventListener("click", () => showSlide(currentSlide - 1));
+    nextBtn.addEventListener("click", () => showSlide(currentSlide + 1));
+
+    fsBtn.addEventListener("click", () => {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(() => {});
+      } else {
+        document.exitFullscreen().catch(() => {});
+      }
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowLeft") {
+        showSlide(currentSlide - 1);
+      } else if (e.key === "ArrowRight" || e.key === " ") {
+        showSlide(currentSlide + 1);
+      } else if (e.key === "f" || e.key === "F") {
+        if (!document.fullscreenElement) {
+          document.documentElement.requestFullscreen().catch(() => {});
+        } else {
+          document.exitFullscreen().catch(() => {});
+        }
+      }
+    });
+
+    showSlide(1);
+  </script>
+</body>
+</html>
