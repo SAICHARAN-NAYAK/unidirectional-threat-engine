@@ -3,23 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CYBERSHIELD // Enterprise Architecture Deck (5 Slides)</title>
+  <title>Smart India Hackathon 2026 // SIH26145 - Galaxy Coders</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #0b0f19;
-      --panel: #111827;
-      --card: #172135;
-      --card-border: #25324e;
-      --cyan: #00e5ff;
-      --blue: #3b82f6;
-      --red: #ff4757;
-      --green: #10b981;
-      --amber: #f59e0b;
-      --text: #f3f4f6;
-      --muted: #9ca3af;
+      --bg-page: #f1f5f9;
+      --slide-bg: #ffffff;
+      --text-dark: #1e293b;
+      --text-muted: #64748b;
+      --sih-blue: #0e387a;
+      --sih-orange: #f97316;
+      --border-blue: #0ea5e9;
+      --border-red: #ef4444;
+      --border-amber: #f59e0b;
+      --border-green: #10b981;
+      --card-bg-light: #f8fafc;
     }
 
     * {
@@ -29,8 +29,8 @@
     }
 
     body {
-      background-color: var(--bg);
-      color: var(--text);
+      background-color: var(--bg-page);
+      color: var(--text-dark);
       font-family: 'Inter', sans-serif;
       min-height: 100vh;
       display: flex;
@@ -39,78 +39,93 @@
       user-select: none;
     }
 
-    /* Top Presentation Bar */
+    /* Top Control Bar */
     header {
-      background: rgba(17, 24, 39, 0.85);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--card-border);
-      padding: 12px 28px;
+      background: #ffffff;
+      border-bottom: 1px solid #e2e8f0;
+      padding: 10px 24px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       z-index: 100;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
     }
 
-    .brand {
+    .brand-group {
       display: flex;
       align-items: center;
       gap: 12px;
-      font-family: 'JetBrains Mono', monospace;
-      font-weight: 800;
-      letter-spacing: 0.05em;
     }
 
-    .brand-icon {
-      color: var(--cyan);
-      font-size: 1.25rem;
-    }
-
-    .brand-title {
-      color: var(--text);
+    .sih-logo-badge {
+      font-family: 'Inter', sans-serif;
+      font-weight: 900;
       font-size: 1.05rem;
+      color: var(--sih-blue);
+      letter-spacing: -0.01em;
     }
 
-    .brand-pill {
-      background: rgba(0, 229, 255, 0.12);
-      color: var(--cyan);
-      border: 1px solid rgba(0, 229, 255, 0.3);
-      font-size: 0.72rem;
-      padding: 2px 8px;
-      border-radius: 4px;
+    .sih-logo-badge span {
+      color: var(--sih-orange);
+    }
+
+    .team-badge-pill {
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      color: var(--sih-blue);
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      font-size: 0.76rem;
+      padding: 3px 10px;
+      border-radius: 999px;
     }
 
     .controls {
       display: flex;
       align-items: center;
-      gap: 14px;
+      gap: 12px;
     }
 
     .btn {
-      background: var(--card);
-      color: var(--text);
-      border: 1px solid var(--card-border);
+      background: #ffffff;
+      color: var(--text-dark);
+      border: 1px solid #cbd5e1;
       padding: 6px 14px;
       border-radius: 6px;
-      font-family: 'JetBrains Mono', monospace;
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
       font-size: 0.82rem;
       cursor: pointer;
       transition: all 0.15s ease;
       display: flex;
       align-items: center;
       gap: 6px;
+      text-decoration: none;
     }
 
     .btn:hover {
-      background: rgba(0, 229, 255, 0.15);
-      border-color: var(--cyan);
-      color: var(--cyan);
+      background: #f8fafc;
+      border-color: var(--sih-blue);
+      color: var(--sih-blue);
+    }
+
+    .btn-download {
+      background: var(--sih-blue);
+      color: #ffffff;
+      border-color: var(--sih-blue);
+    }
+
+    .btn-download:hover {
+      background: #092857;
+      color: #ffffff;
     }
 
     .slide-indicator {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 0.88rem;
-      color: var(--muted);
-      min-width: 80px;
+      font-weight: 700;
+      font-size: 0.84rem;
+      color: var(--text-muted);
+      min-width: 90px;
       text-align: center;
     }
 
@@ -120,19 +135,19 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 20px;
+      padding: 16px 24px;
       position: relative;
     }
 
     .slide-container {
       width: 100%;
-      max-width: 1280px;
+      max-width: 1340px;
       aspect-ratio: 16 / 9;
-      background: var(--panel);
-      border: 1px solid var(--card-border);
-      border-radius: 12px;
-      box-shadow: 0 20px 50px rgba(0,0,0,0.6), 0 0 40px rgba(0, 229, 255, 0.05);
-      padding: 44px 54px;
+      background: var(--slide-bg);
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+      padding: 32px 48px;
       display: flex;
       flex-direction: column;
       position: relative;
@@ -143,7 +158,7 @@
       display: none;
       flex-direction: column;
       height: 100%;
-      animation: fadeIn 0.3s ease-in-out forwards;
+      animation: fadeIn 0.25s ease-in-out forwards;
     }
 
     .slide.active {
@@ -151,46 +166,236 @@
     }
 
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(6px); }
+      from { opacity: 0; transform: translateY(4px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
-    .slide-tag {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.82rem;
-      font-weight: 700;
-      color: var(--cyan);
-      letter-spacing: 0.08em;
-      margin-bottom: 6px;
-      text-transform: uppercase;
+    /* Slide Header */
+    .slide-hdr {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 20px;
+    }
+
+    .slide-hdr-left {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
     }
 
     .slide-title {
-      font-size: 1.85rem;
+      font-size: 1.6rem;
       font-weight: 800;
-      color: var(--text);
-      letter-spacing: -0.02em;
-      margin-bottom: 4px;
+      color: var(--sih-blue);
+      letter-spacing: -0.01em;
     }
 
-    .slide-subtitle {
-      font-size: 0.96rem;
-      color: var(--muted);
-      margin-bottom: 24px;
+    .sih-team-oval {
+      border: 1.5px solid var(--sih-blue);
+      border-radius: 6px;
+      padding: 2px 10px;
+      width: fit-content;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      font-weight: 500;
+      margin-top: 2px;
     }
 
-    /* Grid Layouts */
-    .grid-4 {
+    .sih-team-oval strong {
+      color: var(--sih-blue);
+      font-weight: 700;
+      margin-left: 4px;
+    }
+
+    .slide-hdr-right {
+      text-align: right;
+    }
+
+    .hdr-sih-txt {
+      font-size: 0.95rem;
+      font-weight: 900;
+      color: var(--sih-blue);
+      line-height: 1.15;
+    }
+
+    .hdr-sih-txt span {
+      color: var(--sih-orange);
+    }
+
+    .hdr-ps-txt {
+      font-size: 0.74rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* Slide Content Grid Layouts */
+    .split-2 {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 16px;
+      grid-template-columns: 1fr 1fr;
+      gap: 22px;
+      flex: 1;
+      min-height: 0;
+    }
+
+    .col-left, .col-right {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      min-height: 0;
+    }
+
+    /* SIH Rounded Card */
+    .sih-card {
+      background: #ffffff;
+      border: 1.5px solid var(--border-blue);
+      border-radius: 8px;
+      padding: 12px 16px;
+      display: flex;
+      flex-direction: column;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+    }
+
+    .sih-card.red { border-color: var(--border-red); }
+    .sih-card.amber { border-color: var(--border-amber); }
+    .sih-card.green { border-color: var(--border-green); }
+    .sih-card.navy { border-color: var(--sih-blue); }
+
+    .sih-card-title {
+      font-size: 0.88rem;
+      font-weight: 800;
+      color: var(--border-blue);
+      text-align: center;
+      margin-bottom: 6px;
+      letter-spacing: 0.02em;
+    }
+
+    .sih-card.red .sih-card-title { color: var(--border-red); }
+    .sih-card.amber .sih-card-title { color: var(--border-amber); }
+    .sih-card.green .sih-card-title { color: var(--border-green); }
+    .sih-card.navy .sih-card-title { color: var(--sih-blue); }
+
+    .sih-card-desc {
+      font-size: 0.8rem;
+      color: var(--text-dark);
+      line-height: 1.45;
+      text-align: center;
+    }
+
+    .sih-card ul {
+      list-style: none;
+      font-size: 0.82rem;
+      color: var(--text-dark);
+      line-height: 1.5;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .sih-card li::before {
+      content: "• ";
+      color: var(--sih-blue);
+      font-weight: bold;
+    }
+
+    /* Section Subheadings */
+    .sec-title {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: var(--sih-blue);
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .sec-bullets {
+      list-style: none;
+      font-size: 0.86rem;
+      line-height: 1.55;
+      color: var(--text-dark);
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .sec-bullets li::before {
+      content: "• ";
+      color: var(--sih-blue);
+      font-weight: bold;
+    }
+
+    /* Image Display Frame */
+    .img-display-frame {
+      border: 1.5px solid var(--sih-blue);
+      border-radius: 8px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      background: #0b0f19;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
       flex: 1;
     }
 
-    .grid-3 {
+    .img-display-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .img-caption-strip {
+      background: #ffffff;
+      border-top: 1.5px solid var(--sih-blue);
+      padding: 4px 10px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--sih-blue);
+      text-align: center;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* Flowchart Chevrons (Slide 3) */
+    .flow-pipeline-sih {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .flow-step-block {
+      flex: 1;
+      background: var(--sih-blue);
+      color: #ffffff;
+      border-radius: 6px;
+      padding: 8px 4px;
+      text-align: center;
+      font-size: 0.72rem;
+      font-weight: 700;
+      line-height: 1.25;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.06);
+    }
+
+    .flow-step-block.cyan { background: var(--border-blue); }
+    .flow-step-block.green { background: var(--border-green); }
+    .flow-step-block.orange { background: var(--sih-orange); }
+    .flow-step-block.red { background: var(--border-red); }
+
+    .flow-arrow-sih {
+      color: var(--sih-blue);
+      font-size: 1rem;
+      font-weight: 900;
+    }
+
+    /* 6 Grid Cards */
+    .grid-3x2 {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 18px;
+      grid-template-rows: 1fr 1fr;
+      gap: 10px;
       flex: 1;
     }
 
@@ -198,207 +403,53 @@
       display: grid;
       grid-template-columns: 1fr 1fr;
       grid-template-rows: 1fr 1fr;
-      gap: 16px;
-      flex: 1;
-    }
-
-    .card {
-      background: var(--card);
-      border: 1px solid var(--card-border);
-      border-radius: 8px;
-      padding: 18px 20px;
-      display: flex;
-      flex-direction: column;
-      transition: transform 0.2s ease, border-color 0.2s ease;
-    }
-
-    .card:hover {
-      border-color: rgba(0, 229, 255, 0.4);
-      transform: translateY(-2px);
-    }
-
-    .card-title {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.92rem;
-      font-weight: 700;
-      margin-bottom: 10px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .card ul {
-      list-style: none;
-      font-size: 0.84rem;
-      line-height: 1.55;
-      color: #e2e8f0;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    .card li::before {
-      content: "• ";
-      color: var(--cyan);
-      font-weight: bold;
-    }
-
-    /* Pipeline Flowchart (Slide 2) */
-    .flow-pipeline {
-      display: flex;
-      align-items: center;
       gap: 12px;
-      margin-bottom: 22px;
-      background: rgba(11, 15, 25, 0.5);
-      padding: 14px 18px;
-      border-radius: 8px;
-      border: 1px solid var(--card-border);
-    }
-
-    .flow-node {
       flex: 1;
-      background: var(--card);
-      border: 1px solid var(--cyan);
+    }
+
+    /* Bottom Outcome Banner */
+    .outcome-banner {
+      border: 1.5px solid var(--sih-blue);
       border-radius: 6px;
-      padding: 10px;
-      text-align: center;
-    }
-
-    .flow-node.blue { border-color: var(--blue); }
-    .flow-node.amber { border-color: var(--amber); }
-    .flow-node.green { border-color: var(--green); }
-
-    .node-header {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.74rem;
-      font-weight: 800;
-      color: var(--cyan);
-      margin-bottom: 4px;
-    }
-    .node-header.blue { color: var(--blue); }
-    .node-header.amber { color: var(--amber); }
-    .node-header.green { color: var(--green); }
-
-    .node-desc {
-      font-size: 0.72rem;
-      color: var(--muted);
-      line-height: 1.3;
-    }
-
-    .flow-arrow {
-      color: var(--cyan);
-      font-size: 1.1rem;
-      font-weight: bold;
-    }
-
-    /* Code Blocks in Cards */
-    .code-snippet {
-      background: rgba(0,0,0,0.45);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 4px;
-      padding: 8px 10px;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.74rem;
-      color: #93c5fd;
-      margin-top: 8px;
-      white-space: pre-wrap;
-      word-break: break-all;
-    }
-
-    /* Hero Slide 1 Elements */
-    .hero-wrap {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      height: 100%;
-    }
-
-    .hero-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: rgba(0, 229, 255, 0.1);
-      border: 1px solid rgba(0, 229, 255, 0.3);
-      color: var(--cyan);
-      font-family: 'JetBrains Mono', monospace;
+      padding: 6px 12px;
       font-size: 0.8rem;
       font-weight: 700;
-      padding: 4px 12px;
-      border-radius: 999px;
-      width: fit-content;
-      margin-bottom: 14px;
+      color: var(--sih-blue);
+      text-align: center;
+      margin-top: 10px;
+      background: #eff6ff;
     }
 
-    .hero-h1 {
-      font-size: 3.2rem;
-      font-weight: 900;
-      letter-spacing: -0.03em;
-      line-height: 1.1;
-      color: #ffffff;
-      margin-bottom: 8px;
-    }
-
-    .hero-h2 {
-      font-size: 1.4rem;
-      font-weight: 700;
-      color: var(--cyan);
-      margin-bottom: 16px;
-      letter-spacing: -0.01em;
-    }
-
-    .hero-desc {
-      font-size: 1.05rem;
-      color: var(--muted);
-      max-width: 880px;
-      line-height: 1.6;
-      margin-bottom: 28px;
-    }
-
-    /* Bottom Status Bar */
-    footer {
-      padding: 10px 28px;
+    /* Footer */
+    .slide-footer-sih {
+      margin-top: auto;
+      padding-top: 10px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-top: 1px solid var(--card-border);
-      background: rgba(17, 24, 39, 0.85);
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.78rem;
-      color: var(--muted);
-    }
-
-    .footer-left {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-    }
-
-    .footer-right a {
-      color: var(--cyan);
-      text-decoration: none;
-    }
-
-    .footer-right a:hover {
-      text-decoration: underline;
+      font-size: 0.74rem;
+      color: var(--text-muted);
+      font-family: 'Inter', sans-serif;
+      border-top: 1px solid #f1f5f9;
     }
   </style>
 </head>
 <body>
 
-  <!-- Header -->
+  <!-- Top Bar -->
   <header>
-    <div class="brand">
-      <span class="brand-icon">🛡️</span>
-      <span class="brand-title">CYBERSHIELD</span>
-      <span class="brand-pill">ARCHITECTURE DECK</span>
+    <div class="brand-group">
+      <div class="sih-logo-badge">SMART INDIA <span>HACKATHON 2026</span></div>
+      <div class="team-badge-pill">TEAM: GALAXY CODERS</div>
+      <div class="team-badge-pill" style="background:#fef3c7; border-color:#fde68a; color:#b45309;">PS ID: SIH26145</div>
     </div>
 
     <div class="controls">
       <button class="btn" id="prevBtn" title="Previous Slide (← / Left Arrow)">◀ PREV</button>
-      <span class="slide-indicator" id="slideIndicator">SLIDE 1 / 5</span>
+      <span class="slide-indicator" id="slideIndicator">SLIDE 1 / 6</span>
       <button class="btn" id="nextBtn" title="Next Slide (→ / Right Arrow / Space)">NEXT ▶</button>
       <button class="btn" id="fsBtn" title="Toggle Fullscreen (F)">⛶ FULLSCREEN</button>
-      <a href="CYBERSHIELD_Architecture_Deck.pptx" download class="btn" style="color: var(--green); border-color: var(--green);">📥 DOWNLOAD .PPTX</a>
+      <a href="SIH26145_CYBERSHIELD_Presentation.pptx" download class="btn btn-download">📥 DOWNLOAD OFFICIAL SIH PPTX (2.4 MB)</a>
     </div>
   </header>
 
@@ -406,292 +457,452 @@
   <main class="deck-viewport">
     <div class="slide-container" id="slideContainer">
 
-      <!-- ================= SLIDE 1 ================= -->
+      <!-- ================= SLIDE 1: TITLE PAGE ================= -->
       <section class="slide active" id="slide-1">
-        <div class="hero-wrap">
-          <div class="hero-badge">● AIR-GAPPED DATA DIODE ENCLAVE v2.4</div>
-          <h1 class="hero-h1">CYBERSHIELD</h1>
-          <h2 class="hero-h2">Unidirectional Threat Detection Engine & Enterprise Web SOC</h2>
-          <p class="hero-desc">
-            High-performance passive cyber threat attribution operating over physical data diodes at 50,000+ packets/sec.
-            Engineered with 16-shard zero-contention partitioning, statistical AI anomaly detection, and automated containment.
-          </p>
-
-          <div class="grid-4">
-            <div class="card">
-              <div class="card-title" style="color: var(--cyan);">OPTICAL DATA DIODE</div>
-              <ul>
-                <li>Physical Tx disabled (Rx = 1)</li>
-                <li>Mathematical stealth guarantee</li>
-                <li>Zero backchannel exploitation</li>
-                <li>Air-gapped boundary defense</li>
-              </ul>
+        <div class="slide-hdr">
+          <div class="slide-hdr-left">
+            <div style="font-size: 1.9rem; font-weight: 900; color: var(--sih-blue); letter-spacing: -0.02em;">
+              SMART INDIA HACKATHON 2026
             </div>
-
-            <div class="card">
-              <div class="card-title" style="color: var(--blue);">16-SHARD INGRESS</div>
-              <ul>
-                <li>50,000+ pps sustained ingress</li>
-                <li>Lock-free micro-batch routing</li>
-                <li>Zero-allocation __slots__ model</li>
-                <li>Sub-110ms sliding window SLA</li>
-              </ul>
+            <div style="font-size: 1.4rem; font-weight: 800; color: var(--text-dark); margin-top: 2px;">
+              TITLE PAGE
             </div>
+          </div>
+          <div class="slide-hdr-right">
+            <div class="hdr-sih-txt">SMART INDIA <span>HACKATHON 2026</span></div>
+            <div class="hdr-ps-txt">SIH26145 // NTRO</div>
+          </div>
+        </div>
 
-            <div class="card">
-              <div class="card-title" style="color: var(--amber);">AUTONOMOUS AI & MITRE</div>
-              <ul>
-                <li>14 enterprise tactics mapped</li>
-                <li>C2 beacon detection (CV &lt; 0.15)</li>
-                <li>Fast Shannon entropy (&gt;3.65)</li>
-                <li>Dynamic multi-firewall synthesis</li>
-              </ul>
+        <div class="split-2">
+          <!-- Left: Problem Statement & Team Details -->
+          <div class="col-left" style="justify-content: center; gap: 10px;">
+            <div style="font-size: 0.95rem; line-height: 1.8;">
+              <div><strong style="color: var(--sih-blue);">Problem Statement ID –</strong> <span style="font-weight: 700; color: var(--sih-orange);">SIH26145</span></div>
+              <div><strong style="color: var(--sih-blue);">Problem Statement Title –</strong> <span>AI-Based Detection of Cyber Threats in Unidirectional IP Traffic</span></div>
+              <div><strong style="color: var(--sih-blue);">Theme –</strong> <span>Blockchain & Cybersecurity</span></div>
+              <div><strong style="color: var(--sih-blue);">PS Category –</strong> <span>Software</span></div>
+              <div><strong style="color: var(--sih-blue);">Organization –</strong> <span>National Technical Research Organisation (NTRO)</span></div>
+              <div><strong style="color: var(--sih-blue);">Team ID –</strong> <span style="font-weight: 700;">SIH26-GALAXY</span></div>
+              <div><strong style="color: var(--sih-blue);">Team Name –</strong> <span style="font-weight: 800; color: var(--sih-blue);">Galaxy Coders</span></div>
+              <div><strong style="color: var(--sih-blue);">Solution Title –</strong> <span style="font-weight: 800; color: var(--sih-orange);">ARGUS-ONE // CYBERSHIELD Enclave v2.4</span></div>
             </div>
+          </div>
 
-            <div class="card">
-              <div class="card-title" style="color: var(--green);">CROSS-PLATFORM SOC</div>
-              <ul>
-                <li>Real-time WebSocket stream</li>
-                <li>Live Cloudflare HTTPS tunnel</li>
-                <li>Permanent 24/7 GitHub Pages</li>
-                <li>Native Android Studio WebView</li>
-              </ul>
+          <!-- Right: 3D Cyber Defense AI Operations Visual -->
+          <div class="col-right">
+            <div class="img-display-frame">
+              <img src="assets/mitre_cyber_center.jpg" alt="3D Holographic Operations Center">
+              <div class="img-caption-strip">ARGUS-ONE // HIGH-THROUGHPUT AI UNIDIRECTIONAL THREAT ARCHITECTURE</div>
             </div>
           </div>
         </div>
+
+        <div class="slide-footer-sih">
+          <span>@SIH Idea submission- Template</span>
+          <span>1</span>
+        </div>
       </section>
 
-      <!-- ================= SLIDE 2 ================= -->
+      <!-- ================= SLIDE 2: PROPOSED SOLUTION ================= -->
       <section class="slide" id="slide-2">
-        <div class="slide-tag">CORE ARCHITECTURE & INGESTION PIPELINE</div>
-        <h2 class="slide-title">16-Shard Hash Partitioning & Stream Pipeline</h2>
-        <p class="slide-subtitle">Hardware optical diode isolation feeding micro-batched, lock-partitioned analytical queues.</p>
-
-        <!-- Pipeline Flowchart -->
-        <div class="flow-pipeline">
-          <div class="flow-node">
-            <div class="node-header">1. PHYSICAL INGRESS</div>
-            <div class="node-desc">Mirror TAP / SPAN<br>Optical Diode Rx Only<br>Tx = 0 Physical Cut</div>
+        <div class="slide-hdr">
+          <div class="slide-hdr-left">
+            <div class="slide-title">ARGUS-ONE: AI-POWERED THREAT DETECTION</div>
+            <div class="sih-team-oval">Team Name: <strong>Galaxy Coders</strong></div>
           </div>
-          <div class="flow-arrow">➔</div>
-          <div class="flow-node blue">
-            <div class="node-header blue">2. BINARY PARSER</div>
-            <div class="node-desc">Zero-Copy PCAP Unpack<br>IPv4/IPv6 Wire Decode<br>TCP Flags & Raw UDP</div>
-          </div>
-          <div class="flow-arrow">➔</div>
-          <div class="flow-node amber">
-            <div class="node-header amber">3. MICRO-BATCHER</div>
-            <div class="node-desc">Batch Size: 250 pkts<br>Tuple Hash Routing<br>(hash(src) & 0x7F)%16</div>
-          </div>
-          <div class="flow-arrow">➔</div>
-          <div class="flow-node">
-            <div class="node-header">4. 16 SHARD CORES</div>
-            <div class="node-desc">16 Independent Locks<br>Ring Buffers (maxlen=250)<br>Zero Thread Contention</div>
-          </div>
-          <div class="flow-arrow">➔</div>
-          <div class="flow-node green">
-            <div class="node-header green">5. ROLLING PRUNER</div>
-            <div class="node-desc">3.0s Sliding Window<br>O(1) Popleft Eviction<br>Sub-110ms Triage SLA</div>
+          <div class="slide-hdr-right">
+            <div class="hdr-sih-txt">SMART INDIA <span>HACKATHON 2026</span></div>
+            <div class="hdr-ps-txt">SIH26145</div>
           </div>
         </div>
 
-        <div class="grid-3">
-          <div class="card">
-            <div class="card-title" style="color: var(--cyan);">ZERO-CONTENTION CONCURRENCY</div>
-            <ul>
-              <li><strong>Lock Partitioning:</strong> Divides state into 16 discrete EnclaveShard instances.</li>
-              <li><strong>Lock Amortization:</strong> Groups micro-batches by target shard prior to acquisition, reducing lock requests from O(B) to O(16).</li>
-              <li><strong>Benchmarked Performance:</strong> Sustained 25,000–50,000+ pps on commodity CPUs without frame drops.</li>
-            </ul>
+        <div class="split-2">
+          <!-- Left: PROPOSED SOLUTION & INNOVATION + 3D DATA DIODE DIAGRAM -->
+          <div class="col-left">
+            <div>
+              <div class="sec-title">PROPOSED SOLUTION</div>
+              <ul class="sec-bullets">
+                <li>Passive, read-only monitoring of one-directional IP traffic.</li>
+                <li>Extracts flow, timing, protocol and metadata features without sending traffic back.</li>
+                <li>AI/ML-based anomaly and threat classification with confidence/risk scoring.</li>
+                <li>Live Web SOC dashboard presents alerts, severity, evidence and traffic insights.</li>
+              </ul>
+            </div>
+
+            <div style="margin-top: 4px;">
+              <div class="sec-title">INNOVATION</div>
+              <p style="font-size: 0.82rem; line-height: 1.45; color: var(--text-dark);">
+                Threat intelligence from observation only: detect suspicious behavior without contacting the protected source.
+              </p>
+            </div>
+
+            <!-- Embedded 3D Data Diode Hardware Diagram -->
+            <div class="img-display-frame" style="max-height: 160px; margin-top: 4px;">
+              <img src="assets/data_diode_hardware.jpg" alt="Optical Data Diode Hardware TAP">
+              <div class="img-caption-strip">PHYSICAL OPTICAL DATA DIODE TAP (RX-ONLY // ZERO BACKCHANNEL)</div>
+            </div>
           </div>
 
-          <div class="card">
-            <div class="card-title" style="color: var(--blue);">LOW-ALLOCATION MEMORY MODEL</div>
-            <ul>
-              <li><strong>__slots__ Optimization:</strong> Python structs eliminate dynamic dictionary allocation overhead.</li>
-              <li><strong>Bounded Deques:</strong> In-memory sliding windows (maxlen=250) prevent memory leaks under multi-million packet surges.</li>
-              <li><strong>Zero GC Spikes:</strong> Constant memory footprint guarantees predictable sub-millisecond execution.</li>
-            </ul>
-          </div>
+          <!-- Right: WHY IT FITS THE PROBLEM & 4 THREAT CARDS -->
+          <div class="col-right">
+            <div class="sih-card" style="text-align: center; padding: 8px 12px; margin-bottom: 2px;">
+              <div class="sih-card-title">WHY IT FITS THE PROBLEM</div>
+              <div class="sih-card-desc" style="font-size: 0.78rem;">
+                Works inside the isolated monitoring enclave — no probing, handshake completion, inline blocking or return path.
+              </div>
+            </div>
 
-          <div class="card">
-            <div class="card-title" style="color: var(--green);">UNIDIRECTIONAL DIODE GUARANTEE</div>
-            <ul>
-              <li><strong>Physical Optical Isolation:</strong> Monitored fiber laser physically severed; receive channel strictly listen-only.</li>
-              <li><strong>Passive Packet Dissection:</strong> Zero TCP RST or ICMP responses emitted back onto monitored network.</li>
-              <li><strong>Complete Stealth:</strong> Adversaries cannot detect, ping, or target the sensor enclave.</li>
-            </ul>
+            <div class="grid-2x2">
+              <div class="sih-card red">
+                <div class="sih-card-title">DDoS</div>
+                <div class="sih-card-desc">Rate, source-IP entropy and protocol behavior (&gt;75% SYN ratio triggers P0 alert).</div>
+              </div>
+
+              <div class="sih-card amber">
+                <div class="sih-card-title">C2 BEACONING</div>
+                <div class="sih-card-desc">Periodicity and inter-arrival behavior (CV = σ / μ &lt; 0.15 identifies callbacks).</div>
+              </div>
+
+              <div class="sih-card green">
+                <div class="sih-card-title">DGA / DNS</div>
+                <div class="sih-card-desc">Fast Shannon entropy (H &gt; 3.65), n-grams and query anomalies for exfiltration.</div>
+              </div>
+
+              <div class="sih-card">
+                <div class="sih-card-title">ENCRYPTED TRAFFIC</div>
+                <div class="sih-card-desc">TLS/QUIC metadata, JA4 fingerprints (RFC 8701), size and timing without decryption.</div>
+              </div>
+            </div>
           </div>
+        </div>
+
+        <div class="slide-footer-sih">
+          <span>@SIH Idea submission- Template</span>
+          <span>2</span>
         </div>
       </section>
 
-      <!-- ================= SLIDE 3 ================= -->
+      <!-- ================= SLIDE 3: TECHNICAL APPROACH ================= -->
       <section class="slide" id="slide-3">
-        <div class="slide-tag">ANALYTICAL CORE & MATHEMATICAL FORMULATIONS</div>
-        <h2 class="slide-title">Mathematical Threat Detection: AI/ML, Entropy & JA4</h2>
-        <p class="slide-subtitle">Deterministic models operating concurrently across sliding windows for precision threat attribution.</p>
+        <div class="slide-hdr">
+          <div class="slide-hdr-left">
+            <div class="slide-title">TECHNICAL APPROACH & ARCHITECTURE</div>
+            <div class="sih-team-oval">Team Name: <strong>Galaxy Coders</strong></div>
+          </div>
+          <div class="slide-hdr-right">
+            <div class="hdr-sih-txt">SMART INDIA <span>HACKATHON 2026</span></div>
+            <div class="hdr-ps-txt">SIH26145</div>
+          </div>
+        </div>
 
-        <div class="grid-2x2">
-          <div class="card">
-            <div class="card-title" style="color: var(--amber);">1. BOTNET C2 BEACONING (INTER-ARRIVAL TIME & CV)</div>
-            <ul>
-              <li><strong>Theory:</strong> Automated malware implants maintain periodic heartbeats; human traffic is chaotic.</li>
-              <li><strong>Formula:</strong> <code>CV = σ / μ</code> (standard deviation of arrival deltas divided by mean interval).</li>
-              <li><strong>Detection Boundary:</strong> <code>CV &lt; 0.15</code> identifies rhythmic callbacks (Cobalt Strike / Sliver).</li>
-              <li><strong>Confidence Formulation:</strong> <code>Score = min(0.99, 1.0 - CV)</code>.</li>
-            </ul>
+        <!-- Top: Implementation Flow Chevrons -->
+        <div style="font-size: 0.88rem; font-weight: 800; color: var(--sih-blue); margin-bottom: 6px;">
+          IMPLEMENTATION FLOW & DETECTION PIPELINE
+        </div>
+        <div class="flow-pipeline-sih">
+          <div class="flow-step-block">1. One-way Traffic / PCAP</div>
+          <div class="flow-arrow-sih">➔</div>
+          <div class="flow-step-block cyan">2. Read-only Ingest</div>
+          <div class="flow-arrow-sih">➔</div>
+          <div class="flow-step-block green">3. Feature Extraction</div>
+          <div class="flow-arrow-sih">➔</div>
+          <div class="flow-step-block orange">4. AI/ML Detection</div>
+          <div class="flow-arrow-sih">➔</div>
+          <div class="flow-step-block red">5. Threat + Confidence</div>
+          <div class="flow-arrow-sih">➔</div>
+          <div class="flow-step-block">6. Dashboard Alerts</div>
+        </div>
+
+        <div class="split-2">
+          <!-- Left: TECHNOLOGIES + Real Packet Dissector Screenshot -->
+          <div class="col-left">
+            <div>
+              <div class="sec-title">TECHNOLOGIES</div>
+              <ul class="sec-bullets">
+                <li>Python 3.13 + AI/ML models</li>
+                <li>Packet/flow processing & feature engineering</li>
+                <li>Scapy / PCAP / NetFlow-IPFIX style inputs</li>
+                <li>Web dashboard for live/replayed detections</li>
+                <li>Database/log layer for alerts and evidence</li>
+              </ul>
+            </div>
+
+            <!-- Wireshark Packet Dissector Screenshot -->
+            <div class="img-display-frame" style="max-height: 180px; margin-top: 4px;">
+              <img src="assets/packet_dissector.png" alt="Packet Dissector Wire Decode">
+              <div class="img-caption-strip">ZERO-COPY PCAP WIRE PROTOCOL DISSECTOR (L2/L3/L4 DECODE)</div>
+            </div>
           </div>
 
-          <div class="card">
-            <div class="card-title" style="color: var(--red);">2. DNS TUNNELING & DGA (FAST SHANNON ENTROPY)</div>
-            <ul>
-              <li><strong>Theory:</strong> Base32/64 exfiltration payloads pack high information density into subdomains.</li>
-              <li><strong>Formula:</strong> <code>H(X) = log₂(L) - (1/L) * Σ count(c) * log₂(count(c))</code>.</li>
-              <li><strong>Table Acceleration:</strong> Accelerated via pre-computed <code>_LOG2_CACHE[k]</code> lookup table in O(N).</li>
-              <li><strong>Detection Boundary:</strong> <code>H(X) &gt; 3.65</code> identifies encoded data tunnels and DGA rendezvous.</li>
-            </ul>
-          </div>
+          <!-- Right: DETECTION LOGIC (6 Cards) -->
+          <div class="col-right">
+            <div style="font-size: 0.95rem; font-weight: 800; color: var(--sih-blue); margin-bottom: 2px;">
+              DETECTION LOGIC
+            </div>
+            <div class="grid-3x2">
+              <div class="sih-card red">
+                <div class="sih-card-title">DDoS</div>
+                <div class="sih-card-desc">Flow rate + protocol behavior + source entropy.</div>
+              </div>
 
-          <div class="card">
-            <div class="card-title" style="color: var(--cyan);">3. JA4 TLS CLIENT FINGERPRINTING (RFC 8701)</div>
-            <ul>
-              <li><strong>Theory:</strong> Identifies offensive C2 implants over encrypted TLS without payload decryption.</li>
-              <li><strong>GREASE Stripping:</strong> <code>(val & 0x0F0F) == 0x0A0A</code> bitmask eliminates randomized browser noise.</li>
-              <li><strong>Canonical String:</strong> <code>JA4_A_B_C</code> (Header + Sorted Ciphers SHA-256 + Extensions SHA-256).</li>
-              <li><strong>Example Signature:</strong> <code>t13d1516h2_8daaf6152771_be40b441a884</code> (Cobalt Strike Malleable C2).</li>
-            </ul>
-          </div>
+              <div class="sih-card amber">
+                <div class="sih-card-title">C2</div>
+                <div class="sih-card-desc">Periodic flows + inter-arrival patterns.</div>
+              </div>
 
-          <div class="card">
-            <div class="card-title" style="color: var(--blue);">4. VOLUMETRIC SYN FLOOD & PORT RECON SCAN</div>
-            <ul>
-              <li><strong>Volumetric Inundation:</strong> Cross-shard destination aggregation; &gt;75% SYN ratio triggers P0 alert.</li>
-              <li><strong>Fanout Cardinality:</strong> Tracks distinct destinations and ports probed by source IP in 3.0s window.</li>
-              <li><strong>Recon Boundary:</strong> Distinct ports &gt;25 or targets &gt;15 identifies active port sweep.</li>
-              <li><strong>Jitter Interleaving:</strong> Microsecond pseudo-random delays break artificial looping patterns.</li>
-            </ul>
+              <div class="sih-card green">
+                <div class="sih-card-title">DGA / DNS</div>
+                <div class="sih-card-desc">Query entropy + length + n-gram anomalies.</div>
+              </div>
+
+              <div class="sih-card">
+                <div class="sih-card-title">TLS / QUIC</div>
+                <div class="sih-card-desc">Metadata, fingerprints, size & timing.</div>
+              </div>
+
+              <div class="sih-card navy">
+                <div class="sih-card-title">RECON</div>
+                <div class="sih-card-desc">Fan-out across hosts / destination ports.</div>
+              </div>
+
+              <div class="sih-card orange" style="border-color: var(--sih-orange);">
+                <div class="sih-card-title" style="color: var(--sih-orange);">EXFILTRATION</div>
+                <div class="sih-card-desc">Asymmetric flow-volume anomalies.</div>
+              </div>
+            </div>
           </div>
+        </div>
+
+        <div class="slide-footer-sih">
+          <span>@SIH Idea submission- Template</span>
+          <span>3</span>
         </div>
       </section>
 
-      <!-- ================= SLIDE 4 ================= -->
+      <!-- ================= SLIDE 4: FEASIBILITY AND VIABILITY ================= -->
       <section class="slide" id="slide-4">
-        <div class="slide-tag">AUTONOMOUS AI SECURITY & CONTAINMENT</div>
-        <h2 class="slide-title">MITRE ATT&CK Matrix & Dynamic Firewall Rule Synthesis</h2>
-        <p class="slide-subtitle">Deterministic correlation, blast radius modeling, and instant multi-platform rule generation.</p>
+        <div class="slide-hdr">
+          <div class="slide-hdr-left">
+            <div class="slide-title">FEASIBILITY AND VIABILITY</div>
+            <div class="sih-team-oval">Team Name: <strong>Galaxy Coders</strong></div>
+          </div>
+          <div class="slide-hdr-right">
+            <div class="hdr-sih-txt">SMART INDIA <span>HACKATHON 2026</span></div>
+            <div class="hdr-ps-txt">SIH26145</div>
+          </div>
+        </div>
 
-        <div class="grid-3">
-          <div class="card">
-            <div class="card-title" style="color: var(--cyan);">MITRE ATT&CK MATRIX</div>
+        <!-- Top 3 Feasibility Cards -->
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 16px;">
+          <div class="sih-card">
+            <div class="sih-card-title">TECHNICAL FEASIBILITY</div>
             <ul>
-              <li><strong>14 Enterprise Tactics Covered:</strong> TA0043 (Recon) through TA0040 (Impact).</li>
-              <li><strong>Technique Mapping:</strong> Direct binding to T1498.001 (SYN Flood), T1071.001 (Web C2), T1046 (Port Recon), T1568.002 (DGA), T1573.002 (TLS C2).</li>
-              <li><strong>Attribution Profiles:</strong> Correlates threat observables to APT28, Mirai, Cobalt Strike, and LockBit affiliates.</li>
+              <li>Passive traffic can be replayed from PCAP/flow data.</li>
+              <li>Features are available without payload decryption.</li>
+              <li>Models can score incrementally.</li>
+              <li>Dashboard can visualize structured alerts.</li>
             </ul>
           </div>
 
-          <div class="card">
-            <div class="card-title" style="color: var(--amber);">BLAST RADIUS & PLAYBOOKS</div>
+          <div class="sih-card navy">
+            <div class="sih-card-title">OPERATIONAL FEASIBILITY</div>
             <ul>
-              <li><strong>Asset Criticality:</strong> Scores risk exposure across Domain Controllers (ad-dc01), Databases (pgsql-db01), and Workstations.</li>
-              <li><strong>Containment Playbooks:</strong> Step-by-step P0/P1/P2 mitigation steps (SYN cookies, route blackholing, EDR response).</li>
-              <li><strong>Merkle Audit Ledger:</strong> SHA-256 hash-chaining prevents retroactive tampering with SOC forensic evidence.</li>
-              <li><strong>LLM Triage Hook:</strong> Optional Google Gemini API integration for semantic threat reporting.</li>
+              <li>Read-only architecture preserves isolation.</li>
+              <li>No active probing or mitigation command is required.</li>
+              <li>Modular pipeline supports lab testing and replay.</li>
+              <li>SIEM export queue streams CEF & Syslog events.</li>
             </ul>
           </div>
 
-          <div class="card">
-            <div class="card-title" style="color: var(--green);">DYNAMIC RULE SYNTHESIS</div>
+          <div class="sih-card green">
+            <div class="sih-card-title">SCALABILITY</div>
             <ul>
-              <li>Instant multi-target firewall compilation:</li>
+              <li>Streaming feature extraction supports continuous input.</li>
+              <li>Detectors can be separated by threat class.</li>
+              <li>16-shard hashing reaches 50,000+ packets/sec.</li>
+              <li>Architecture can scale toward isolated SOC monitoring.</li>
             </ul>
-            <div class="code-snippet"># 1. Linux IPTables
-iptables -A INPUT -p tcp --dport 443 -m hashlimit --hashlimit-above 50/sec -j DROP
-
-# 2. Linux NFTables
-table inet filter { chain input { tcp flags syn meter syn-meter { ip saddr limit rate over 50/sec } drop } }
-
-# 3. Suricata IDS Rule
-alert tcp any any -> $DST $PORT (msg:"CYBERSHIELD Inbound Flood"; flags:S; count 100; sid:2000001;)</div>
           </div>
+        </div>
+
+        <!-- Bottom: CHALLENGES / RISKS vs MITIGATION STRATEGIES -->
+        <div class="split-2">
+          <div class="sih-card red" style="flex: 1;">
+            <div class="sih-card-title">CHALLENGES / RISKS</div>
+            <ul style="font-size: 0.8rem; gap: 6px;">
+              <li>False positives from legitimate periodic traffic.</li>
+              <li>Encrypted traffic limits payload visibility.</li>
+              <li>Model performance can vary across environments.</li>
+              <li>Throughput and bounded-latency requirements must be demonstrated.</li>
+            </ul>
+          </div>
+
+          <div class="sih-card green" style="flex: 1;">
+            <div class="sih-card-title">MITIGATION STRATEGIES</div>
+            <ul style="font-size: 0.8rem; gap: 6px;">
+              <li>Combine multiple behavioral features before raising alerts.</li>
+              <li>Use metadata-only detection (JA4+ fingerprints & timing).</li>
+              <li>Validate on benign + attack traffic and tune thresholds.</li>
+              <li>Measure flows/sec or Mbps and processing latency (sub-110ms SLA).</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="slide-footer-sih">
+          <span>@SIH Idea submission- Template</span>
+          <span>4</span>
         </div>
       </section>
 
-      <!-- ================= SLIDE 5 ================= -->
+      <!-- ================= SLIDE 5: IMPACT AND BENEFITS ================= -->
       <section class="slide" id="slide-5">
-        <div class="slide-tag">ENTERPRISE OPERATIONS & GLOBAL DEPLOYMENT</div>
-        <h2 class="slide-title">Enterprise Web SOC Console & Multi-Platform Delivery</h2>
-        <p class="slide-subtitle">Accessible globally over HTTPS, permanent edge hosting, and native Android Studio integration.</p>
+        <div class="slide-hdr">
+          <div class="slide-hdr-left">
+            <div class="slide-title">IMPACT AND BENEFITS</div>
+            <div class="sih-team-oval">Team Name: <strong>Galaxy Coders</strong></div>
+          </div>
+          <div class="slide-hdr-right">
+            <div class="hdr-sih-txt">SMART INDIA <span>HACKATHON 2026</span></div>
+            <div class="hdr-ps-txt">SIH26145</div>
+          </div>
+        </div>
 
-        <div class="grid-2x2">
-          <div class="card">
-            <div class="card-title" style="color: var(--cyan);">ENTERPRISE WEB SOC CONSOLE</div>
-            <ul>
-              <li><strong>Authentic Cyber Atmosphere:</strong> Dark obsidian UI, glassmorphic panels, and DEFCON status badge.</li>
-              <li><strong>Sub-Second Time Interleaving:</strong> Millisecond jitter timestamps break artificial looping patterns.</li>
-              <li><strong>Corporate Asset Attribution:</strong> Maps raw IPs to enterprise DNS hostnames (wkst-*.corp, ad-dc01.corp).</li>
-              <li><strong>Real-Time Threat Radar:</strong> SVG canvas visualizing live network ingress and fanout connections.</li>
+        <div class="split-2">
+          <!-- Left: TARGET USERS + Live Operations Console Screenshot -->
+          <div class="col-left">
+            <div>
+              <div class="sec-title">TARGET USERS</div>
+              <ul class="sec-bullets">
+                <li>Critical-infrastructure security teams</li>
+                <li>Security Operations Centers (SOC)</li>
+                <li>Network / incident-response analysts</li>
+                <li>Organizations using isolated monitoring enclaves</li>
+              </ul>
+            </div>
+
+            <!-- Live Dashboard Screenshot -->
+            <div class="img-display-frame" style="max-height: 210px; margin-top: 4px;">
+              <img src="assets/soc_dashboard_live.png" alt="Live SOC Threat Radar">
+              <div class="img-caption-strip">LIVE PRODUCTION WEB SOC CONSOLE: OPTICAL RADAR & INGEST</div>
+            </div>
+          </div>
+
+          <!-- Right: KEY BENEFITS (6 Cards) -->
+          <div class="col-right">
+            <div class="sec-title">KEY BENEFITS</div>
+            <div class="grid-3x2">
+              <div class="sih-card red">
+                <div class="sih-card-title">SECURITY</div>
+                <div class="sih-card-desc">Earlier visibility into DDoS, C2, reconnaissance and exfiltration behavior.</div>
+              </div>
+
+              <div class="sih-card">
+                <div class="sih-card-title">ISOLATION</div>
+                <div class="sih-card-desc">Maintains one-way monitoring without creating a return path.</div>
+              </div>
+
+              <div class="sih-card navy">
+                <div class="sih-card-title">ANALYST VALUE</div>
+                <div class="sih-card-desc">Alerts include threat class, confidence and supporting evidence.</div>
+              </div>
+
+              <div class="sih-card green">
+                <div class="sih-card-title">FORENSICS</div>
+                <div class="sih-card-desc">Structured records support investigation and evidence-oriented monitoring.</div>
+              </div>
+
+              <div class="sih-card amber">
+                <div class="sih-card-title">SCALABILITY</div>
+                <div class="sih-card-desc">Streaming architecture can be extended with additional detectors and models.</div>
+              </div>
+
+              <div class="sih-card orange" style="border-color: var(--sih-orange);">
+                <div class="sih-card-title" style="color: var(--sih-orange);">COST</div>
+                <div class="sih-card-desc">Software analytics can complement existing passive monitoring infrastructure.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="outcome-banner">
+          Overall outcome: turn one-way network visibility into actionable cyber-threat intelligence without compromising the isolation boundary.
+        </div>
+
+        <div class="slide-footer-sih">
+          <span>@SIH Idea submission- Template</span>
+          <span>5</span>
+        </div>
+      </section>
+
+      <!-- ================= SLIDE 6: RESEARCH AND REFERENCES ================= -->
+      <section class="slide" id="slide-6">
+        <div class="slide-hdr">
+          <div class="slide-hdr-left">
+            <div class="slide-title">RESEARCH AND REFERENCES</div>
+            <div class="sih-team-oval">Team Name: <strong>Galaxy Coders</strong></div>
+          </div>
+          <div class="slide-hdr-right">
+            <div class="hdr-sih-txt">SMART INDIA <span>HACKATHON 2026</span></div>
+            <div class="hdr-ps-txt">SIH26145</div>
+          </div>
+        </div>
+
+        <!-- Primary Problem Reference -->
+        <div style="margin-bottom: 14px;">
+          <div class="sec-title">PRIMARY PROBLEM REFERENCE</div>
+          <p style="font-size: 0.88rem; line-height: 1.5; color: var(--text-dark);">
+            Smart India Hackathon 2026 — PS SIH26145: “AI-Based Detection of Cyber Threats in Unidirectional IP Traffic” — National Technical Research Organisation (NTRO).
+          </p>
+        </div>
+
+        <div class="split-2">
+          <!-- Left: TECHNICAL / RESEARCH REFERENCES -->
+          <div class="col-left">
+            <div class="sec-title">TECHNICAL / RESEARCH REFERENCES</div>
+            <ul class="sec-bullets">
+              <li>Smart India Hackathon 2026 problem statement and expected solution requirements.</li>
+              <li>CIC-IDS2017 — benchmark network intrusion traffic dataset for experimentation and validation.</li>
+              <li>Zeek — network security monitoring and protocol/flow metadata analysis concepts.</li>
+              <li>Scapy — packet capture processing and network traffic experimentation.</li>
+              <li>JA4+ / TLS fingerprinting concepts — metadata-based identification of encrypted sessions.</li>
             </ul>
           </div>
 
-          <div class="card">
-            <div class="card-title" style="color: var(--green);">GLOBAL HTTPS CLOUDFLARE TUNNEL</div>
-            <ul>
-              <li><strong>Worldwide Live Link:</strong> <a href="https://red-avi-object-email.trycloudflare.com" target="_blank" style="color: var(--green);">https://red-avi-object-email.trycloudflare.com</a></li>
-              <li><strong>Zero-Barrier Access:</strong> No firewall port forwarding or public IP exposure required.</li>
-              <li><strong>Real-Time Bi-Directional WebSocket:</strong> Sub-millisecond telemetry stream direct to any device.</li>
-              <li><strong>Interactive Threat Injection:</strong> Trigger live SYN floods, C2 beacon pulses, and port recon scans.</li>
-            </ul>
+          <!-- Right: VERIFIED LIVE PROOF OF CONCEPT DEPLOYMENT -->
+          <div class="col-right">
+            <div class="sih-card green" style="padding: 14px 18px; flex: 1;">
+              <div class="sih-card-title">VERIFIED LIVE DEPLOYMENT & PROOF OF CONCEPT</div>
+              <ul style="font-size: 0.82rem; gap: 8px;">
+                <li><strong>Live Worldwide Enclave:</strong> <a href="https://red-avi-object-email.trycloudflare.com" target="_blank" style="color: var(--sih-blue);">red-avi-object-email.trycloudflare.com</a><br>(Full 16-shard telemetry, live WebSocket stream, radar, and attack injection).</li>
+                <li><strong>Permanent 24/7 Edge:</strong> <a href="https://saicharan-nayak.github.io/unidirectional-threat-engine/" target="_blank" style="color: var(--sih-blue);">saicharan-nayak.github.io/...</a><br>(GitHub Pages CI/CD with client-side simulation engine fallback).</li>
+                <li><strong>Source Repository:</strong> <a href="https://github.com/SAICHARAN-NAYAK/unidirectional-threat-engine" target="_blank" style="color: var(--sih-blue);">SAICHARAN-NAYAK/unidirectional-threat-engine</a></li>
+              </ul>
+            </div>
           </div>
+        </div>
 
-          <div class="card">
-            <div class="card-title" style="color: var(--blue);">PERMANENT EDGE WEB (GITHUB PAGES)</div>
-            <ul>
-              <li><strong>Permanent 24/7 Hosting:</strong> <a href="https://saicharan-nayak.github.io/unidirectional-threat-engine/" target="_blank" style="color: var(--blue);">https://saicharan-nayak.github.io/unidirectional-threat-engine/</a></li>
-              <li><strong>Autonomous Dual-Mode:</strong> Automatically connects to live backend WebSocket if online.</li>
-              <li><strong>Zero-Server Fallback:</strong> Auto-engages high-fidelity client-side simulation engine if offline.</li>
-              <li><strong>Automated CI/CD:</strong> Deployed automatically via .github/workflows/deploy-pages.yml on push.</li>
-            </ul>
-          </div>
+        <div class="outcome-banner" style="background: #f8fafc;">
+          Design principle: read-only ingest • no return path • no payload decryption • streaming detection • structured alerts
+        </div>
 
-          <div class="card">
-            <div class="card-title" style="color: var(--amber);">ANDROID STUDIO NATIVE APP & REPO</div>
-            <ul>
-              <li><strong>Android Studio Project:</strong> android_studio_app/ native WebView wrapper with full touch controls.</li>
-              <li><strong>One-Click Launcher:</strong> Open_In_Android_Studio.bat auto-detects active Android Studio executable.</li>
-              <li><strong>SIEM Integrations:</strong> Background worker exporting ArcSight CEF, RFC 5424 Syslog, and Webhooks.</li>
-              <li><strong>Open Source GitHub Repo:</strong> SAICHARAN-NAYAK/unidirectional-threat-engine (main branch).</li>
-            </ul>
-          </div>
+        <div class="slide-footer-sih">
+          <span>@SIH Idea submission- Template</span>
+          <span>6</span>
         </div>
       </section>
 
     </div>
   </main>
 
-  <!-- Footer -->
-  <footer>
-    <div class="footer-left">
-      <span>CYBERSHIELD ENCLAVE v2.4</span>
-      <span>•</span>
-      <span>STATUS: OPERATIONAL</span>
-      <span>•</span>
-      <span>USE KEYS: [←] PREV | [→] / [SPACE] NEXT | [F] FULLSCREEN</span>
-    </div>
-    <div class="footer-right">
-      <a href="index.html">RETURN TO LIVE OPERATIONS CONSOLE ➔</a>
-    </div>
-  </footer>
-
   <script>
     let currentSlide = 1;
-    const totalSlides = 5;
+    const totalSlides = 6;
 
     const slideIndicator = document.getElementById("slideIndicator");
     const prevBtn = document.getElementById("prevBtn");
     const nextBtn = document.getElementById("nextBtn");
     const fsBtn = document.getElementById("fsBtn");
-    const slideContainer = document.getElementById("slideContainer");
 
     function showSlide(n) {
       if (n < 1) n = 1;
