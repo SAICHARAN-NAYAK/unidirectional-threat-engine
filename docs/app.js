@@ -5,7 +5,7 @@
  */
 
 let serverBaseUrl = (typeof window !== "undefined" && window.location.hostname && window.location.hostname !== "localhost" && window.location.hostname !== "127.0.0.1")
-  ? "https://red-avi-object-email.trycloudflare.com"
+  ? "https://children-just-kerry-verde.trycloudflare.com"
   : "http://127.0.0.1:8080";
 let isOfflineMode = false;
 let ws = null;
