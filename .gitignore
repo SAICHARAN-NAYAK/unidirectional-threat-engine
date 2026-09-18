@@ -51,4 +51,5 @@ threat_alerts.jsonl
 config.yml
 .gradle/
 *.lock
+*.apk
 

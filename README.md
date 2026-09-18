@@ -1,5 +1,8 @@
 # CYBERSHIELD // Unidirectional IP Cyber Threat Detection Engine & Web SOC
 
+> 🚀 **Looking for Astra Omni AI?**  
+> Astra Omni AI has been separated into its own dedicated main repository: [**github.com/SAICHARAN-NAYAK/astra-omni-ai**](https://github.com/SAICHARAN-NAYAK/astra-omni-ai) with the live web application available at [**saicharan-nayak.github.io/astra-omni-ai/**](https://saicharan-nayak.github.io/astra-omni-ai/).
+
 A passive, air-gapped network threat detection engine and real-time Cyber Operations Enclave. Built for high-throughput packet processing (reaching **>350,000 packets/sec**, exceeding the 25,000–50,000 pkts/sec requirement), sub-millisecond evaluation latency, and zero return path (unidirectional data diode monitor).
 
 ---
