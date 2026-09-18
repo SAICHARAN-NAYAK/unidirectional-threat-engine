@@ -12,6 +12,11 @@ import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.ProgressBar
+import android.Manifest
+import android.content.pm.PackageManager
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import android.webkit.PermissionRequest
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -38,9 +43,23 @@ class MainActivity : AppCompatActivity() {
         configureWebView()
         setupSwipeRefresh()
         setupBackNavigation()
+        requestHardwarePermissions()
 
         // Load local bundled HTML asset
         webView.loadUrl("file:///android_asset/index.html")
+    }
+
+    private fun requestHardwarePermissions() {
+        val permissions = arrayOf(
+            Manifest.permission.CAMERA,
+            Manifest.permission.RECORD_AUDIO
+        )
+        val needed = permissions.filter {
+            ContextCompat.checkSelfPermission(this, it) != PackageManager.PERMISSION_GRANTED
+        }
+        if (needed.isNotEmpty()) {
+            ActivityCompat.requestPermissions(this, needed.toTypedArray(), 101)
+        }
     }
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -67,6 +86,9 @@ class MainActivity : AppCompatActivity() {
 
         // Cache policy
         settings.cacheMode = WebSettings.LOAD_DEFAULT
+
+        // Enable media playback without gesture for voice synthesis & stream
+        settings.mediaPlaybackRequiresUserGesture = false
 
         // Injected Native JavaScript Bridge
         val webAppInterface = WebAppInterface(this)
@@ -108,6 +130,13 @@ class MainActivity : AppCompatActivity() {
 
             override fun onConsoleMessage(consoleMessage: ConsoleMessage?): Boolean {
                 return super.onConsoleMessage(consoleMessage)
+            }
+
+            // Project Astra Live Camera & Mic Access
+            override fun onPermissionRequest(request: PermissionRequest?) {
+                runOnUiThread {
+                    request?.grant(request.resources)
+                }
             }
         }
     }
