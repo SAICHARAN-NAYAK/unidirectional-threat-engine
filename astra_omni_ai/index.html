@@ -122,6 +122,9 @@
               </div>
             </div>
             <div class="dropdown-divider"></div>
+            <button id="btnOpenProfileModal" class="dropdown-item">
+              <span>✏️</span> <span>Customize Profile</span>
+            </button>
             <button id="btnOpenAuthModal" class="dropdown-item">
               <span>🔑</span> <span id="authActionLabel">Sign In / Switch Account</span>
             </button>
@@ -129,7 +132,10 @@
               <span>🛡️</span> <span>Privacy & Security Vault</span>
             </button>
             <div class="dropdown-divider"></div>
-            <button id="btnLogout" class="dropdown-item danger">
+            <button id="btnDeleteAccount" class="dropdown-item danger">
+              <span>🗑️</span> <span>Delete Profile & Data</span>
+            </button>
+            <button id="btnLogout" class="dropdown-item">
               <span>🚪</span> <span>Sign Out / Lock Session</span>
             </button>
           </div>
@@ -781,6 +787,118 @@
           <div class="guest-action-bar">
             <button type="button" id="btnContinueAsGuest" class="btn-subtle-guest">
               Continue as Guest (Client Mode) &rarr;
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- User Profile Customization & Delete Modal -->
+    <div id="profileModal" class="modal-backdrop hidden">
+      <div class="modal-card profile-modal-card">
+        <div class="modal-header">
+          <div class="modal-title-wrap">
+            <span class="auth-icon-badge">👤</span>
+            <div>
+              <h2 class="modal-title">Customize Profile</h2>
+              <p class="modal-subtitle">Personalize your identity, avatar, role, or wipe profile data.</p>
+            </div>
+          </div>
+          <button id="btnCloseProfileModal" class="icon-btn-sm" aria-label="Close Profile">
+            <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" fill="none" stroke-width="2">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+
+        <div class="modal-body profile-modal-body">
+          <!-- Avatar Picker -->
+          <div class="profile-avatar-section">
+            <div class="current-avatar-preview" id="profileAvatarPreview">👤</div>
+            <div class="avatar-picker-wrap">
+              <label class="form-label">Choose Avatar / Icon</label>
+              <div class="avatar-options-row" id="avatarOptionsRow">
+                <button type="button" class="avatar-opt active" data-avatar="👤">👤</button>
+                <button type="button" class="avatar-opt" data-avatar="🧑‍💻">🧑‍💻</button>
+                <button type="button" class="avatar-opt" data-avatar="🛡️">🛡️</button>
+                <button type="button" class="avatar-opt" data-avatar="🚀">🚀</button>
+                <button type="button" class="avatar-opt" data-avatar="⚡">⚡</button>
+                <button type="button" class="avatar-opt" data-avatar="🤖">🤖</button>
+                <button type="button" class="avatar-opt" data-avatar="🌟">🌟</button>
+                <button type="button" class="avatar-opt" data-avatar="👑">👑</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Display Name -->
+          <div class="form-group">
+            <label class="form-label" for="profileDisplayNameInput">Display Name</label>
+            <input 
+              type="text" 
+              id="profileDisplayNameInput" 
+              class="form-input" 
+              placeholder="e.g. User, Client, Alex" 
+              maxlength="32" 
+            />
+          </div>
+
+          <!-- Handle / Email -->
+          <div class="form-group">
+            <label class="form-label" for="profileEmailInput">Email / Handle</label>
+            <input 
+              type="text" 
+              id="profileEmailInput" 
+              class="form-input" 
+              placeholder="e.g. user@astra.ai" 
+              maxlength="48" 
+            />
+          </div>
+
+          <!-- Role / Specialty -->
+          <div class="form-group">
+            <label class="form-label" for="profileRoleInput">Role / Specialty</label>
+            <select id="profileRoleInput" class="form-input">
+              <option value="AI Explorer">AI Explorer</option>
+              <option value="Software Engineer">Software Engineer</option>
+              <option value="Cybersecurity Analyst">Cybersecurity Analyst</option>
+              <option value="AI Researcher">AI Researcher</option>
+              <option value="Creative Designer">Creative Designer</option>
+              <option value="Student & Learner">Student & Learner</option>
+              <option value="Client / Executive">Client / Executive</option>
+            </select>
+          </div>
+
+          <!-- Bio / Status Message -->
+          <div class="form-group">
+            <label class="form-label" for="profileBioInput">Status Message / Bio</label>
+            <input 
+              type="text" 
+              id="profileBioInput" 
+              class="form-input" 
+              placeholder="e.g. Exploring Gemini 2.0 & ChatGPT-6 reasoning" 
+              maxlength="80" 
+            />
+          </div>
+
+          <!-- Actions -->
+          <div class="profile-actions-row">
+            <button type="button" id="btnSaveProfile" class="btn-primary">
+              ✓ Save Profile
+            </button>
+            <button type="button" id="btnCancelProfile" class="btn-secondary">
+              Cancel
+            </button>
+          </div>
+
+          <!-- Danger Zone: Delete Profile & Account -->
+          <div class="profile-danger-zone">
+            <div class="danger-zone-header">
+              <span class="danger-badge">Permanent Deletion</span>
+              <p>Wipes all custom profile records, destroys session tokens, and resets your account to Guest.</p>
+            </div>
+            <button type="button" id="btnConfirmDeleteProfile" class="btn-danger-outline">
+              🗑️ Delete Profile & Data
             </button>
           </div>
         </div>

@@ -93,6 +93,19 @@
     btnOpenAuthModal: document.getElementById('btnOpenAuthModal'),
     authActionLabel: document.getElementById('authActionLabel'),
     btnAccountSettings: document.getElementById('btnAccountSettings'),
+    btnOpenProfileModal: document.getElementById('btnOpenProfileModal'),
+    btnDeleteAccount: document.getElementById('btnDeleteAccount'),
+    profileModal: document.getElementById('profileModal'),
+    btnCloseProfileModal: document.getElementById('btnCloseProfileModal'),
+    btnCancelProfile: document.getElementById('btnCancelProfile'),
+    btnSaveProfile: document.getElementById('btnSaveProfile'),
+    btnConfirmDeleteProfile: document.getElementById('btnConfirmDeleteProfile'),
+    profileAvatarPreview: document.getElementById('profileAvatarPreview'),
+    profileDisplayNameInput: document.getElementById('profileDisplayNameInput'),
+    profileEmailInput: document.getElementById('profileEmailInput'),
+    profileRoleInput: document.getElementById('profileRoleInput'),
+    profileBioInput: document.getElementById('profileBioInput'),
+    avatarOptionsRow: document.getElementById('avatarOptionsRow'),
     btnLogout: document.getElementById('btnLogout'),
     authModal: document.getElementById('authModal'),
     btnCloseAuthModal: document.getElementById('btnCloseAuthModal'),
@@ -565,6 +578,51 @@
       if (DOM.dropdownUserEmail) DOM.dropdownUserEmail.textContent = u.username || 'client@enclave.io';
 
       if (DOM.authActionLabel) DOM.authActionLabel.textContent = u.isGuest ? 'Sign In / Verify OTP' : 'Switch Account';
+    },
+
+    async updateProfile({ displayName, avatar, email, role, bio }) {
+      if (!state.currentUser) return;
+      const cleanName = (displayName || '').trim() || 'User';
+      const cleanEmail = (email || '').trim() || state.currentUser.username || 'user@astra.ai';
+      const cleanAvatar = avatar || state.currentUser.avatar || '👤';
+      const cleanRole = role || state.currentUser.role || 'AI Explorer';
+      const cleanBio = (bio || '').trim();
+
+      const updatedUser = {
+        ...state.currentUser,
+        displayName: cleanName,
+        username: cleanEmail,
+        avatar: cleanAvatar,
+        role: cleanRole,
+        bio: cleanBio,
+        isGuest: false
+      };
+
+      await this.setCurrentUser(updatedUser);
+      Toast.show('Profile customized successfully!', 'success');
+      AndroidBridge.triggerHaptic('HIGH');
+    },
+
+    async deleteAccount() {
+      const confirmDelete = window.confirm('Are you sure you want to permanently delete your customized profile? This will wipe your saved profile and session tokens.');
+      if (!confirmDelete) return;
+
+      const prefix = Vault.getUserPrefix();
+      localStorage.removeItem('astra_current_user');
+      localStorage.removeItem(`astra_vault_payload_${prefix}`);
+      localStorage.removeItem(`astra_vault_salt_${prefix}`);
+      localStorage.removeItem(`astra_plain_sessions_${prefix}`);
+
+      state.currentUser = null;
+      state.vaultKey = null;
+      state.isVaultLocked = true;
+      state.sessions = [];
+      if (DOM.userDropdownMenu) DOM.userDropdownMenu.classList.add('hidden');
+      if (DOM.profileModal) DOM.profileModal.classList.add('hidden');
+
+      await this.loginAsGuest();
+      Toast.show('Profile and local data permanently deleted.', 'guardrail', 4000);
+      AndroidBridge.triggerHaptic('HIGH');
     },
 
     async logout() {
@@ -1607,6 +1665,78 @@
       if (DOM.btnCloseAuthModal) {
         DOM.btnCloseAuthModal.addEventListener('click', () => {
           DOM.authModal.classList.add('hidden');
+        });
+      }
+
+      // Open Profile Customization Modal
+      let selectedAvatar = '👤';
+      if (DOM.btnOpenProfileModal) {
+        DOM.btnOpenProfileModal.addEventListener('click', () => {
+          DOM.userDropdownMenu.classList.add('hidden');
+          DOM.btnUserAuth.classList.remove('active');
+          const u = state.currentUser || {};
+          if (DOM.profileDisplayNameInput) DOM.profileDisplayNameInput.value = u.displayName || 'User';
+          if (DOM.profileEmailInput) DOM.profileEmailInput.value = u.username || 'user@astra.ai';
+          if (DOM.profileRoleInput) DOM.profileRoleInput.value = u.role || 'AI Explorer';
+          if (DOM.profileBioInput) DOM.profileBioInput.value = u.bio || '';
+          
+          selectedAvatar = u.avatar || '👤';
+          if (DOM.profileAvatarPreview) DOM.profileAvatarPreview.textContent = selectedAvatar;
+          
+          document.querySelectorAll('.avatar-opt').forEach(opt => {
+            opt.classList.toggle('active', opt.getAttribute('data-avatar') === selectedAvatar);
+          });
+
+          if (DOM.profileModal) DOM.profileModal.classList.remove('hidden');
+        });
+      }
+
+      // Avatar picker buttons
+      document.querySelectorAll('.avatar-opt').forEach(opt => {
+        opt.addEventListener('click', () => {
+          document.querySelectorAll('.avatar-opt').forEach(o => o.classList.remove('active'));
+          opt.classList.add('active');
+          selectedAvatar = opt.getAttribute('data-avatar');
+          if (DOM.profileAvatarPreview) DOM.profileAvatarPreview.textContent = selectedAvatar;
+          AndroidBridge.triggerHaptic('LOW');
+        });
+      });
+
+      // Close Profile Modal
+      if (DOM.btnCloseProfileModal) {
+        DOM.btnCloseProfileModal.addEventListener('click', () => {
+          if (DOM.profileModal) DOM.profileModal.classList.add('hidden');
+        });
+      }
+      if (DOM.btnCancelProfile) {
+        DOM.btnCancelProfile.addEventListener('click', () => {
+          if (DOM.profileModal) DOM.profileModal.classList.add('hidden');
+        });
+      }
+
+      // Save Profile
+      if (DOM.btnSaveProfile) {
+        DOM.btnSaveProfile.addEventListener('click', async () => {
+          await AuthManager.updateProfile({
+            displayName: DOM.profileDisplayNameInput ? DOM.profileDisplayNameInput.value : '',
+            email: DOM.profileEmailInput ? DOM.profileEmailInput.value : '',
+            role: DOM.profileRoleInput ? DOM.profileRoleInput.value : '',
+            bio: DOM.profileBioInput ? DOM.profileBioInput.value : '',
+            avatar: selectedAvatar
+          });
+          if (DOM.profileModal) DOM.profileModal.classList.add('hidden');
+        });
+      }
+
+      // Delete Account / Profile buttons
+      if (DOM.btnDeleteAccount) {
+        DOM.btnDeleteAccount.addEventListener('click', async () => {
+          await AuthManager.deleteAccount();
+        });
+      }
+      if (DOM.btnConfirmDeleteProfile) {
+        DOM.btnConfirmDeleteProfile.addEventListener('click', async () => {
+          await AuthManager.deleteAccount();
         });
       }
 
