@@ -380,6 +380,7 @@
     },
 
     async sendOTP(destination) {
+      Guardrail.checkOtpRateLimit();
       const clean = destination.trim();
       const inputDest = document.getElementById('otpDestinationInput');
       const btnSend = document.getElementById('btnSendOtp');
@@ -455,6 +456,7 @@
     },
 
     async verifyOTP(enteredCode) {
+      Guardrail.checkOtpRateLimit();
       const btnVerify = document.getElementById('btnVerifyOtp');
       const otpRow = document.getElementById('otpInputsRow');
       if (!state.currentOtp) {
@@ -479,8 +481,11 @@
           if (boxes[0]) boxes[0].focus();
           setTimeout(() => otpRow.classList.remove('shake'), 450);
         }
+        Guardrail.recordFailedOtp();
         throw new Error('Incorrect 6-digit verification code. Please check and try again.');
       }
+
+      Guardrail.recordSuccessfulOtp();
 
       if (btnVerify) {
         btnVerify.innerHTML = '<span class="btn-spinner"></span> Verifying...';
@@ -627,7 +632,61 @@
       /ghp_[a-zA-Z0-9]{36}/g      // GitHub Personal Access Tokens
     ],
 
+    // Anti-Spam & Rate Limiting Tracker
+    rateLimiter: {
+      timestamps: [],
+      maxPerWindow: 5,
+      windowMs: 10000,
+      cooldownUntil: 0,
+      otpAttempts: 0,
+      otpLockedUntil: 0
+    },
+
+    checkRateLimit() {
+      const now = Date.now();
+      if (now < this.rateLimiter.cooldownUntil) {
+        const remainingSec = Math.ceil((this.rateLimiter.cooldownUntil - now) / 1000);
+        throw new Error(`Anti-Spam Shield: Request rate limit reached. Please wait ${remainingSec}s.`);
+      }
+
+      // Filter timestamps within sliding window
+      this.rateLimiter.timestamps = this.rateLimiter.timestamps.filter(t => now - t < this.rateLimiter.windowMs);
+
+      if (this.rateLimiter.timestamps.length >= this.rateLimiter.maxPerWindow) {
+        this.rateLimiter.cooldownUntil = now + 6000; // 6s cooldown penalty
+        throw new Error('Anti-Spam Shield: Too many rapid requests. 6-second cooldown active.');
+      }
+
+      this.rateLimiter.timestamps.push(now);
+    },
+
+    checkOtpRateLimit() {
+      const now = Date.now();
+      if (now < this.rateLimiter.otpLockedUntil) {
+        const remainingSec = Math.ceil((this.rateLimiter.otpLockedUntil - now) / 1000);
+        throw new Error(`Brute-Force Lockout: Too many failed OTP attempts. Locked for ${remainingSec}s.`);
+      }
+    },
+
+    recordFailedOtp() {
+      this.rateLimiter.otpAttempts++;
+      if (this.rateLimiter.otpAttempts >= 3) {
+        this.rateLimiter.otpLockedUntil = Date.now() + 60000; // 60s hard lockout
+        this.rateLimiter.otpAttempts = 0;
+        throw new Error('Brute-Force Defense: 3 incorrect attempts. Verification locked for 60 seconds.');
+      }
+    },
+
+    recordSuccessfulOtp() {
+      this.rateLimiter.otpAttempts = 0;
+      this.rateLimiter.otpLockedUntil = 0;
+    },
+
     sanitizeInput(text) {
+      if (text.length > 10000) {
+        throw new Error('Payload limit exceeded: Maximum 10,000 characters permitted per message.');
+      }
+
       if (!state.guardrailsEnabled) return { clean: text, violated: false };
 
       let isViolated = false;
@@ -1867,12 +1926,31 @@
       const rawText = DOM.userInput.value.trim();
       if (!rawText && state.attachments.length === 0) return;
 
+      // Anti-Spam Shield: Check prompt frequency
+      try {
+        Guardrail.checkRateLimit();
+      } catch (err) {
+        Toast.show(err.message, 'guardrail');
+        if (DOM.inputContainer) {
+          DOM.inputContainer.classList.add('shake');
+          setTimeout(() => DOM.inputContainer.classList.remove('shake'), 450);
+        }
+        AndroidBridge.triggerHaptic('MEDIUM');
+        return;
+      }
+
       DOM.userInput.value = '';
       DOM.userInput.style.height = 'auto';
 
       // 1. Guardrail Sanitization
-      const check = Guardrail.sanitizeInput(rawText);
-      const cleanPrompt = check.clean;
+      let cleanPrompt = rawText;
+      try {
+        const check = Guardrail.sanitizeInput(rawText);
+        cleanPrompt = check.clean;
+      } catch (err) {
+        Toast.show(err.message, 'guardrail');
+        return;
+      }
 
       const currentAttachments = [...state.attachments];
       state.attachments = [];
