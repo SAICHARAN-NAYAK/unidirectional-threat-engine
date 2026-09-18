@@ -234,19 +234,28 @@
   // TOAST NOTIFICATIONS
   // ==========================================================================
   const Toast = {
-    show(message, type = 'info', duration = 3000) {
+    show(message, type = 'info', duration = 4000) {
       const toast = document.createElement('div');
-      toast.className = `toast ${type === 'guardrail' ? 'toast-guardrail' : ''}`;
+      toast.className = `toast ${type === 'guardrail' ? 'toast-guardrail' : type === 'success' ? 'toast-success' : ''}`;
       
       const icon = type === 'guardrail' ? '🛡️' : type === 'success' ? '✅' : '✦';
-      toast.innerHTML = `<span>${icon}</span> <span>${message}</span>`;
+      toast.innerHTML = `
+        <span style="font-size: 1.1rem; flex-shrink: 0;">${icon}</span>
+        <span style="flex: 1; line-height: 1.4;">${message}</span>
+        <div class="toast-progress" style="animation-duration: ${duration}ms;"></div>
+      `;
       
-      DOM.toastContainer.appendChild(toast);
-      setTimeout(() => {
-        toast.style.opacity = '0';
-        toast.style.transform = 'translateX(30px)';
+      const dismiss = () => {
+        if (toast.dataset.dismissed) return;
+        toast.dataset.dismissed = 'true';
+        toast.classList.add('toast-exit');
         setTimeout(() => toast.remove(), 250);
-      }, duration);
+      };
+
+      toast.addEventListener('click', dismiss);
+      DOM.toastContainer.appendChild(toast);
+
+      setTimeout(dismiss, duration);
     }
   };
 
@@ -370,11 +379,24 @@
       return googleUser;
     },
 
-    sendOTP(destination) {
+    async sendOTP(destination) {
       const clean = destination.trim();
+      const inputDest = document.getElementById('otpDestinationInput');
+      const btnSend = document.getElementById('btnSendOtp');
       if (!clean) {
+        if (inputDest && inputDest.parentElement) {
+          inputDest.parentElement.classList.add('shake');
+          setTimeout(() => inputDest.parentElement.classList.remove('shake'), 450);
+        }
         throw new Error('Please enter a valid email or mobile number.');
       }
+
+      if (btnSend) {
+        btnSend.innerHTML = '<span class="btn-spinner"></span> Sending code...';
+        btnSend.disabled = true;
+      }
+
+      await new Promise(r => setTimeout(r, 400)); // Smooth human-friendly feedback
 
       // Generate a realistic 6-digit numeric OTP
       const code = Math.floor(100000 + Math.random() * 900000).toString();
@@ -384,7 +406,12 @@
         expires: Date.now() + 10 * 60 * 1000
       };
 
-      // Switch to Step B
+      if (btnSend) {
+        btnSend.innerHTML = 'Send 6-Digit Code';
+        btnSend.disabled = false;
+      }
+
+      // Switch to Step B with fluid animation
       const stepA = document.getElementById('otpStepInput');
       const stepB = document.getElementById('otpStepVerify');
       if (stepA) stepA.classList.remove('active');
@@ -428,14 +455,43 @@
     },
 
     async verifyOTP(enteredCode) {
+      const btnVerify = document.getElementById('btnVerifyOtp');
+      const otpRow = document.getElementById('otpInputsRow');
       if (!state.currentOtp) {
+        if (otpRow) {
+          otpRow.classList.add('shake');
+          setTimeout(() => otpRow.classList.remove('shake'), 450);
+        }
         throw new Error('No active verification code found. Please request a new code.');
       }
       if (Date.now() > state.currentOtp.expires) {
+        if (otpRow) {
+          otpRow.classList.add('shake');
+          setTimeout(() => otpRow.classList.remove('shake'), 450);
+        }
         throw new Error('Code has expired. Please click resend to get a new code.');
       }
       if (enteredCode.trim() !== state.currentOtp.code) {
+        if (otpRow) {
+          otpRow.classList.add('shake');
+          const boxes = document.querySelectorAll('.otp-digit');
+          boxes.forEach(b => b.value = '');
+          if (boxes[0]) boxes[0].focus();
+          setTimeout(() => otpRow.classList.remove('shake'), 450);
+        }
         throw new Error('Incorrect 6-digit verification code. Please check and try again.');
+      }
+
+      if (btnVerify) {
+        btnVerify.innerHTML = '<span class="btn-spinner"></span> Verifying...';
+        btnVerify.disabled = true;
+      }
+
+      await new Promise(r => setTimeout(r, 450)); // Tactile verification pause
+
+      if (btnVerify) {
+        btnVerify.innerHTML = '✓ Verified!';
+        btnVerify.style.backgroundColor = '#10b981';
       }
 
       const otpUser = {
@@ -451,6 +507,14 @@
       state.currentOtp = null;
       if (this.otpInterval) clearInterval(this.otpInterval);
       Toast.show('Verification successful! Welcome, Client.', 'success');
+      AndroidBridge.triggerHaptic('HIGH');
+
+      await new Promise(r => setTimeout(r, 350));
+      if (btnVerify) {
+        btnVerify.innerHTML = 'Verify & Sign In';
+        btnVerify.style.backgroundColor = '';
+        btnVerify.disabled = false;
+      }
       return otpUser;
     },
 
@@ -1183,14 +1247,14 @@
               <div class="thought-pulse"></div>
               <span>Thinking Process (Expanded)</span>
             </div>
-            <span>▾</span>
+            <span class="thought-chevron">▾</span>
           </div>
           <div class="thought-content">${this.escapeHTML(msg.thought)}</div>
         `;
 
         thoughtCard.querySelector('.thought-header').addEventListener('click', () => {
-          const content = thoughtCard.querySelector('.thought-content');
-          content.classList.toggle('collapsed');
+          thoughtCard.classList.toggle('collapsed');
+          AndroidBridge.triggerHaptic('LOW');
         });
 
         body.appendChild(thoughtCard);
@@ -1818,15 +1882,51 @@
       Chat.addMessage('user', cleanPrompt, { attachments: currentAttachments });
       AndroidBridge.triggerHaptic('LOW');
 
-      // 3. Generate Model Response
+      // 3. Show Realtime Assistant Thinking Placeholder
+      const thinkingRow = document.createElement('div');
+      thinkingRow.className = 'ai-thinking-row';
+      thinkingRow.id = 'aiThinkingRow';
+      const modeLabel = state.currentMode === 'gpt6' 
+        ? 'ChatGPT-6 is reasoning...' 
+        : state.currentMode === 'astra' 
+          ? 'Project Astra is perceiving...' 
+          : 'Gemini is synthesizing...';
+      const modeAvatar = state.currentMode === 'gpt6' ? 'avatar-gpt6' : state.currentMode === 'astra' ? 'avatar-astra' : 'avatar-gemini';
+      const modeIcon = state.currentMode === 'gpt6' ? '⬡' : state.currentMode === 'astra' ? '◎' : '✦';
+      
+      thinkingRow.innerHTML = `
+        <div class="message-avatar ${modeAvatar}">
+          ${modeIcon}
+        </div>
+        <div class="ai-thinking-indicator">
+          <div class="thinking-dots-wave">
+            <div class="thinking-dot"></div>
+            <div class="thinking-dot"></div>
+            <div class="thinking-dot"></div>
+          </div>
+          <span class="thinking-label-shimmer">${modeLabel}</span>
+        </div>
+      `;
+      DOM.messagesList.appendChild(thinkingRow);
+      Chat.scrollToBottom();
+
+      // 4. Generate Model Response
       try {
         const res = await NeuralEngine.generateResponse(cleanPrompt, currentAttachments, state.currentMode);
+        
+        // Remove thinking placeholder smoothly
+        const activeThinking = document.getElementById('aiThinkingRow');
+        if (activeThinking) activeThinking.remove();
+
         Chat.addMessage('assistant', res.text, {
           mode: state.currentMode,
           thought: res.thought,
           sources: res.sources
         });
       } catch (err) {
+        const activeThinking = document.getElementById('aiThinkingRow');
+        if (activeThinking) activeThinking.remove();
+
         Chat.addMessage('assistant', `⚠️ Execution Error: ${err.message}`, { mode: state.currentMode });
       }
     },
